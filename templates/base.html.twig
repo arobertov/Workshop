@@ -3,10 +3,19 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}{{ encore_entry_link_tags('app') }}{% endblock %}
     </head>
     <body>
+       <div>
+           <span>
+               <a href="{{ path('article_index') }}">[ Articles ]</a>
+               <a href="{{ path('category_index') }}">[ Categories ]</a>
+               <a href="{{ path('tag_index') }}">[ Tags ]</a>
+           </span>
+       </div>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
     </body>
 </html>
