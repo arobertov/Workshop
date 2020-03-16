@@ -29,7 +29,7 @@
                 <td>{{ article.category.name }}</td>
                 <td>
                     {% for tag in article.tags   %}
-                        <span> [ {{ tag.name }} ]</span>
+                        <span> <a href="{{ path('tag_show',{'id':tag.id}) }}">[ {{ tag.name }} ]</a></span>
                     {% else %}
                         <span> - </span>
                     {% endfor %}
