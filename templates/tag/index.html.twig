@@ -10,6 +10,7 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
+                <th>Used</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -18,6 +19,9 @@
             <tr>
                 <td>{{ tag.id }}</td>
                 <td>{{ tag.name }}</td>
+                <td>
+                    {{ tag.hasArticle ? 'Yes':'No' }}
+                </td>
                 <td>
                     <a href="{{ path('tag_show', {'id': tag.id}) }}">show</a>
                     <a href="{{ path('tag_edit', {'id': tag.id}) }}">edit</a>

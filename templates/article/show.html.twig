@@ -16,8 +16,18 @@
                 <td>{{ article.title }}</td>
             </tr>
             <tr>
-                <th>Contents</th>
-                <td>{{ article.contents }}</td>
+                <th>Category</th>
+                <td>{{ article.category.name }}</td>
+            </tr>
+            <tr>
+                <th>Tags</th>
+                <td>
+                    {% for tag in article.tags   %}
+                        <span> <a href="{{ path('tag_show',{'id':tag.id}) }}">[ {{ tag.name }} ]</a></span>
+                    {% else %}
+                        <span> - </span>
+                    {% endfor %}
+                </td>
             </tr>
             <tr>
                 <th>DateCreated</th>
@@ -26,6 +36,10 @@
             <tr>
                 <th>DateEdit</th>
                 <td>{{ article.dateEdit ? article.dateEdit|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Contents</th>
+                <td>{{ article.contents }}</td>
             </tr>
         </tbody>
     </table>
