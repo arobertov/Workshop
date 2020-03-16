@@ -66,6 +66,9 @@ class TagController extends AbstractController
 
     /**
      * @Route("/{id}/edit", name="tag_edit", methods={"GET","POST"})
+     * @param Request $request
+     * @param Tag $tag
+     * @return Response
      */
     public function edit(Request $request, Tag $tag): Response
     {
