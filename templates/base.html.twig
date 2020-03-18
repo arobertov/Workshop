@@ -11,11 +11,48 @@
                <a href="{{ path('article_index') }}">[ Articles ]</a>
                <a href="{{ path('category_index') }}">[ Categories ]</a>
                <a href="{{ path('tag_index') }}">[ Tags ]</a>
+               {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                   <a href="{{ path('app_logout') }}"> [ Logout ] </a>
+               {% else %}
+                   <a data-toggle="modal" data-target="#loginModal">
+                       <span class="btn  btn-success">Login</span>
+                   </a>
+               {% endif %}
            </span>
        </div>
         {% block body %}{% endblock %}
+       {{ include('security/login_modal.html.twig') }}
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
+            <script>
+                $(document).ready(function () {
+                    let frm = $('#formLoginModal');
+                    let errMsgField = $('#err_message');
+                    let lastUsername = $('#inputUsername');
+                    errMsgField.hide();
+                    frm.submit(function (e) {
+                        e.preventDefault();
+                        $.ajax({
+                            type: frm.attr('method'),
+                            url: frm.attr('action'),
+                            data: frm.serialize(),
+                            success: function (v) {
+                                // ---- if success,  redirect to homepage ------- //
+                                $(location).attr('href',frm.attr('data-id'));
+                            },
+                            error: function (errorMsg) {
+                                // --- if error, send error message from login form error field ----- //
+                                let errText = JSON.parse( errorMsg.responseText );
+                                errMsgField.show();
+                                errMsgField.empty();
+                                console.log(errText['error']['messageKey']);
+                                errMsgField.append(errText['error']!==undefined?errText['error']['messageKey']:errorMsg);
+                                lastUsername.val(errText['last_username']);
+                            }
+                        });
+                    });
+                })
+            </script>
         {% endblock %}
     </body>
 </html>
