@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Article;
+use App\Entity\User;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use Exception;
@@ -10,12 +11,25 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @Route("/article")
  */
 class ArticleController extends AbstractController
 {
+
+    /**
+     * @var UserInterface|null
+     */
+    private $currentUser;
+
+    public  function  __construct(Security $security)
+    {
+        $this->currentUser = $security->getUser();
+    }
+
     /**
      * @Route("/", name="article_index", methods={"GET"})
      * @param ArticleRepository $articleRepository
@@ -32,6 +46,7 @@ class ArticleController extends AbstractController
      * @Route("/new", name="article_new", methods={"GET","POST"})
      * @param Request $request
      * @return Response
+     * @throws Exception
      */
     public function new(Request $request): Response
     {
@@ -43,6 +58,7 @@ class ArticleController extends AbstractController
             foreach ($article->getTags() as $tag){
                 $article->addTag($tag);
             }
+            $article->setAuthor($this->currentUser->getAlias());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($article);
             $entityManager->flush();
@@ -77,11 +93,12 @@ class ArticleController extends AbstractController
      */
     public function edit(Request $request, Article $article): Response
     {
+        $this->denyAccessUnlessGranted('view', $article);
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $article->setDateEdit(new \DateTime('now'));
+            $article->setAuthor($this->currentUser->getAlias());
             $this->getDoctrine()->getManager()->flush();
 
             return $this->redirectToRoute('article_index');

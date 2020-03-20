@@ -12,12 +12,17 @@
                <a href="{{ path('category_index') }}">[ Categories ]</a>
                <a href="{{ path('tag_index') }}">[ Tags ]</a>
                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                   <a href="{{ path('app_logout') }}"> [ Logout ] </a>
+                   <a href="{{ path('app_logout') }}">
+                       <span class="btn btn-success">Logout </span>
+                   </a>
                {% else %}
                    <a data-toggle="modal" data-target="#loginModal">
                        <span class="btn  btn-success">Login</span>
                    </a>
                {% endif %}
+           </span>
+           <span>
+             {% if app.user %} Welcome: {{app.user.alias }} {% endif %}
            </span>
        </div>
         {% block body %}{% endblock %}

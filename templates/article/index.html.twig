@@ -10,19 +10,23 @@
             <tr>
                 <th>Id</th>
                 <th>Title</th>
+                <th>Author</th>
                 <th>Contents</th>
                 <th>DateCreated</th>
                 <th>DateEdit</th>
                 <th>Category</th>
                 <th>Tags</th>
+                <th>Published</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for article in articles %}
+            {% if article.isPublished or is_granted("ROLE_EDITOR") %}
             <tr>
                 <td>{{ article.id }}</td>
                 <td>{{ article.title }}</td>
+                <td>{{ article.author }}</td>
                 <td>{{ article.contents }}</td>
                 <td>{{ article.dateCreated ? article.dateCreated|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ article.dateEdit ? article.dateEdit|date('Y-m-d H:i:s') : '' }}</td>
@@ -34,11 +38,13 @@
                         <span> - </span>
                     {% endfor %}
                 </td>
+                <td>{{ article.isPublished ? 'Yes': 'No' }}</td>
                 <td>
                     <a href="{{ path('article_show', {'id': article.id}) }}">show</a>
                     <a href="{{ path('article_edit', {'id': article.id}) }}">edit</a>
                 </td>
             </tr>
+            {% endif %}
         {% else %}
             <tr>
                 <td colspan="6">no records found</td>

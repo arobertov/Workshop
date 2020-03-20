@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception as ExceptionAlias;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -64,7 +65,22 @@ class Article
      */
     private $category;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $author;
 
+    /**
+     * @ORM\Column(type="boolean")
+     * @param bool
+     */
+    private $isPublished;
+
+
+    /**
+     * Article constructor.
+     * @throws ExceptionAlias
+     */
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -190,4 +206,40 @@ class Article
         return $this;
     }
 
+    public function getAuthor(): ?string
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(string $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+
+
+    public function isPrivate(){
+        return true;
+    }
+
+
+    /**
+     * @return bool|null
+     */
+    public function getIsPublished():?bool
+    {
+        return $this->isPublished;
+    }
+
+    /**
+     * @param mixed $isPublished
+     * @return Article
+     */
+    public function setIsPublished($isPublished): self
+    {
+        $this->isPublished = $isPublished;
+        return $this;
+    }
 }

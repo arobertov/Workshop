@@ -42,10 +42,6 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('email')
-            ->add('roles',CollectionType::class,[
-                'entry_type'=>TextType::class,
-                'allow_add'=>true
-            ])
             ->add('alias')
         ;
     }

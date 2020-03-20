@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Tag;
 use App\Form\TagType;
 use App\Repository\TagRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +29,7 @@ class TagController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_EDITOR")
      * @Route("/new", name="tag_new", methods={"GET","POST"})
      * @param Request $request
      * @return Response
@@ -53,6 +55,7 @@ class TagController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_EDITOR")
      * @Route("/{id}", name="tag_show", methods={"GET"})
      * @param Tag $tag
      * @return Response
@@ -65,6 +68,7 @@ class TagController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_EDITOR")
      * @Route("/{id}/edit", name="tag_edit", methods={"GET","POST"})
      * @param Request $request
      * @param Tag $tag
@@ -88,6 +92,7 @@ class TagController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_EDITOR")
      * @Route("/{id}", name="tag_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Tag $tag): Response
