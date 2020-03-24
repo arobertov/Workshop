@@ -38,9 +38,21 @@ class Category
      */
     private $articles;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\News", mappedBy="category")
+     */
+    private $news;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\SpiritualPearls", mappedBy="category")
+     */
+    private $spiritualPearls;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
+        $this->news = new ArrayCollection();
+        $this->spiritualPearls = new ArrayCollection();
     }
 
 
@@ -101,6 +113,68 @@ class Category
             // set the owning side to null (unless already changed)
             if ($article->getCategory() === $this) {
                 $article->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|News[]
+     */
+    public function getNews(): Collection
+    {
+        return $this->news;
+    }
+
+    public function addNews(News $news): self
+    {
+        if (!$this->news->contains($news)) {
+            $this->news[] = $news;
+            $news->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNews(News $news): self
+    {
+        if ($this->news->contains($news)) {
+            $this->news->removeElement($news);
+            // set the owning side to null (unless already changed)
+            if ($news->getCategory() === $this) {
+                $news->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SpiritualPearls[]
+     */
+    public function getSpiritualPearls(): Collection
+    {
+        return $this->spiritualPearls;
+    }
+
+    public function addSpiritualPearl(SpiritualPearls $spiritualPearl): self
+    {
+        if (!$this->spiritualPearls->contains($spiritualPearl)) {
+            $this->spiritualPearls[] = $spiritualPearl;
+            $spiritualPearl->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpiritualPearl(SpiritualPearls $spiritualPearl): self
+    {
+        if ($this->spiritualPearls->contains($spiritualPearl)) {
+            $this->spiritualPearls->removeElement($spiritualPearl);
+            // set the owning side to null (unless already changed)
+            if ($spiritualPearl->getCategory() === $this) {
+                $spiritualPearl->setCategory(null);
             }
         }
 

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit SpiritualPearls{% endblock %}
+
+{% block body %}
+    <h1>Edit SpiritualPearls</h1>
+
+    {{ include('spiritual_pearls/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('spiritual_pearls_index') }}">back to list</a>
+
+    {{ include('spiritual_pearls/_delete_form.html.twig') }}
+{% endblock %}

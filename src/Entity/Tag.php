@@ -38,9 +38,21 @@ class Tag
      */
     private $articles;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\News", mappedBy="tags")
+     */
+    private $news;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\SpiritualPearls", mappedBy="tags")
+     */
+    private $spiritualPearls;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
+        $this->news = new ArrayCollection();
+        $this->spiritualPearls = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,5 +105,61 @@ class Tag
      */
     public function hasArticle(){
         return !$this->getArticles()->isEmpty();
+    }
+
+    /**
+     * @return Collection|News[]
+     */
+    public function getNews(): Collection
+    {
+        return $this->news;
+    }
+
+    public function addNews(News $news): self
+    {
+        if (!$this->news->contains($news)) {
+            $this->news[] = $news;
+            $news->addTag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNews(News $news): self
+    {
+        if ($this->news->contains($news)) {
+            $this->news->removeElement($news);
+            $news->removeTag($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|SpiritualPearls[]
+     */
+    public function getSpiritualPearls(): Collection
+    {
+        return $this->spiritualPearls;
+    }
+
+    public function addSpiritualPearls(SpiritualPearls $category): self
+    {
+        if (!$this->spiritualPearls->contains($category)) {
+            $this->spiritualPearls[] = $category;
+            $category->addTag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSpiritualPearls(SpiritualPearls $spiritualPearls): self
+    {
+        if ($this->spiritualPearls->contains($spiritualPearls)) {
+            $this->spiritualPearls->removeElement($spiritualPearls);
+            $spiritualPearls->removeTag($this);
+        }
+
+        return $this;
     }
 }

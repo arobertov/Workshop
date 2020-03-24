@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SpiritualPearls{% endblock %}
+
+{% block body %}
+    <h1>SpiritualPearls</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ spiritual_pearl.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ spiritual_pearl.title }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ spiritual_pearl.content }}</td>
+            </tr>
+            <tr>
+                <th>DateCreated</th>
+                <td>{{ spiritual_pearl.dateCreated ? spiritual_pearl.dateCreated|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DateEdited</th>
+                <td>{{ spiritual_pearl.dateEdited ? spiritual_pearl.dateEdited|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Author</th>
+                <td>{{ spiritual_pearl.author }}</td>
+            </tr>
+            <tr>
+                <th>IsPublishes</th>
+                <td>{{ spiritual_pearl.isPublishes ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('spiritual_pearls_index') }}">back to list</a>
+
+    <a href="{{ path('spiritual_pearls_edit', {'id': spiritual_pearl.id}) }}">edit</a>
+
+    {{ include('spiritual_pearls/_delete_form.html.twig') }}
+{% endblock %}
