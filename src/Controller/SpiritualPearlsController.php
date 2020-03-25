@@ -6,6 +6,7 @@ use App\Entity\SpiritualPearls;
 use App\Form\SpiritualPearlsType;
 use App\Repository\SpiritualPearlsRepository;
 use Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,6 +46,7 @@ class SpiritualPearlsController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_EDITOR")
      * @Route("/new", name="spiritual_pearls_new", methods={"GET","POST"})
      * @param Request $request
      * @return Response
@@ -82,6 +84,7 @@ class SpiritualPearlsController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_EDITOR")
      * @Route("/{id}/edit", name="spiritual_pearls_edit", methods={"GET","POST"})
      * @param Request $request
      * @param SpiritualPearls $spiritualPearl
@@ -107,6 +110,7 @@ class SpiritualPearlsController extends AbstractController
     }
 
     /**
+     * @IsGranted("ROLE_EDITOR")
      * @Route("/{id}", name="spiritual_pearls_delete", methods={"DELETE"})
      * @param Request $request
      * @param SpiritualPearls $spiritualPearl

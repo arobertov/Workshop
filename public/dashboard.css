@@ -38,18 +38,24 @@ body {
     }
 }
 
+.sidebar .nav-item{
+   color: white;
+}
+.sidebar .nav-item:hover {
+    background-color: #7ba581;
+}
+
+.sidebar .active{
+    background-color: #7ba581;
+}
+
 .sidebar .nav-link {
     font-weight: 500;
-    color:white !important;
+    color:inherit;
 }
-
 .sidebar .nav-link .feather {
     margin-right: 4px;
-    color: #999;
-}
-
-.sidebar .nav-link.active {
-    color: #007bff;
+    color: inherit;
 }
 
 .sidebar .nav-link:hover .feather,
