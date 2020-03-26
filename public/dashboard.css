@@ -111,15 +111,39 @@ body {
     box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
 
-.bg-add-btn {
-    background-color: #b0462b;
-    border-color : #80250f;
+.add-btn {
+    text-align: left;
     color: white;
+    padding: 1.4rem 1rem;
 }
 
-.bg-add-btn:hover {
+.add-btn:hover {
     background-color: #bb7361;
     border-color : #bb7361;
     color: white;
 }
+
+#aside-menu{
+    position: absolute;
+}
+
+.collapse-left {
+    position: relative;
+    left: 12.5rem;
+    top:-0.5rem;
+    padding: 0.825rem;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.nav-icon{
+    margin-right: 0.5rem;
+}
+
+.sub-title{
+    color: white;
+    font-size: 1.4rem;
+}
+
 

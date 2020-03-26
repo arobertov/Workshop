@@ -10,3 +10,11 @@
 .bg-yellow-white{
     background-color: #dbd69b !important;
 }
+.caption-text{
+    color: #b0462b !important;
+}
+.bg-sub-caption{
+    background-color: #b0462b;
+    border-color : #80250f;
+}
+
