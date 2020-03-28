@@ -9,14 +9,22 @@ use App\Repository\ArticleRepository;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * @Route("/article")
+ * @Route("/api")
  */
 class ArticleController extends AbstractController
 {
@@ -26,13 +34,17 @@ class ArticleController extends AbstractController
      */
     private $currentUser;
 
-    public  function  __construct(Security $security)
+    /** @var SerializerInterface */
+    private $serializer;
+
+    public  function  __construct(Security $security,SerializerInterface $serializer)
     {
         $this->currentUser = $security->getUser();
+        $this->serializer = $serializer;
     }
 
     /**
-     * @Route("/", name="article_index", methods={"GET"})
+     * @Route("/list/index", name="article_index", methods={"GET"})
      * @param ArticleRepository $articleRepository
      * @return Response
      */
@@ -44,8 +56,21 @@ class ArticleController extends AbstractController
     }
 
     /**
+     * @Route("/index" ,name="admin_article_index")
+     * @param ArticleRepository $articleRepository
+     * @return JsonResponse
+     * @throws Exception
+     */
+    public function indexAdmin(ArticleRepository $articleRepository) :JsonResponse
+    {
+        $articles = $articleRepository->findAllArticles();
+        $data = $this->serializer->serialize($articles, JsonEncoder::FORMAT);
+        return new JsonResponse($data,Response::HTTP_OK,[],true);
+    }
+
+    /**
      * @IsGranted("ROLE_EDITOR")
-     * @Route("/new", name="article_new", methods={"GET","POST"})
+     * @Route("article/new", name="article_new", methods={"GET","POST"})
      * @param Request $request
      * @return Response
      * @throws Exception

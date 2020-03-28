@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class TagController extends AbstractController
 {
+
     /**
      * @Route("/", name="tag_index", methods={"GET"})
      * @param TagRepository $tagRepository

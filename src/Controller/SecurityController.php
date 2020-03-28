@@ -16,9 +16,11 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        /*
         if (!$this->getUser()) {
              return $this->redirectToRoute('homepage');
          }
+        */
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -28,6 +30,7 @@ class SecurityController extends AbstractController
         if($error!=null){
             return  $this->json(['error'=>$error,'last_username'=>$lastUsername],400);
         }
+
         return $this->json( ['error' => $error],200);
     }
 

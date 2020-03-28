@@ -5,6 +5,10 @@ namespace App\Repository;
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Article|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +18,12 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class ArticleRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $em;
+
+    public function __construct(ManagerRegistry $registry,EntityManagerInterface $em)
     {
         parent::__construct($registry, Article::class);
+        $this->em = $em;
     }
 
     // /**
@@ -36,15 +43,31 @@ class ArticleRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Article
+    /**
+     * @param $id
+     * @return Article|null
+     * @throws \Exception
+     */
+    public function findOneBySomeField($id): ?Article
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        try {
+            return $this->createQueryBuilder('a')
+                ->andWhere('a.id = :id')
+                ->setParameter('id', $id)
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException $e) {
+            throw new \Exception('No items');
+        }
     }
-    */
+
+    public function findAllArticles()
+    {
+        $qb = $this->em->createQueryBuilder();
+        $query = $qb->select('a')
+            ->from(Article::class,'a')
+            ->getQuery();
+        return $query->getArrayResult();
+    }
+
 }
