@@ -24,6 +24,7 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/js/app.js')
+    .addEntry('datetime','./assets/js/datetime_css.js')
     .addEntry('vue','./assets/vue/index.js')
     //.addEntry('dashboard','./assets/js/dashboard_css.js')
 

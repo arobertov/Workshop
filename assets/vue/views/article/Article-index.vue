@@ -1,10 +1,29 @@
 <template>
     <div class="main-content">
         <h2></h2>
-        <div v-for="article in articles"
-                :key="article.id">
-            <p>{{article.title}}</p>
-        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Заглавие</th>
+                    <th scope="col">Дата</th>
+                    <th scope="col">Автор</th>
+                    <th scope="col">Категория</th>
+                    <th scope="col">Етикети</th>
+                    <th scope="col">Публикувана</th>
+                </tr>
+            </thead>
+            <tr v-for="article in articles"
+                    :key="article.id">
+                <td>{{article.id}}</td>
+                <td>{{article.title}}</td>
+                <td>{{article.dateCreated | formatDate }}</td>
+                <td>{{article.author  }}</td>
+                <td>Kat</td>
+                <td>tag</td>
+                <td>{{article.isPublished }}</td>
+            </tr>
+        </table>
     </div>
 </template>
 
