@@ -8,6 +8,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -64,8 +65,10 @@ class ArticleRepository extends ServiceEntityRepository
     public function findAllArticles()
     {
         $qb = $this->em->createQueryBuilder();
-        $query = $qb->select('a')
+        $query = $qb->select('a','tags')
             ->from(Article::class,'a')
+            ->join('a.tags','tags')
+            ->orderBy('a.dateEdit','DESC')
             ->getQuery();
         return $query->getArrayResult();
     }
