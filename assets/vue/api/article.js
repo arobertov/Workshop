@@ -1,9 +1,9 @@
 import axios from "axios";
 
 export default {
-    create(message) {
-        return axios.post("article/api/new", {
-            message: message
+    create(articleFormData) {
+        return axios.post("/api/create/new", {
+            form_data: articleFormData
         });
     },
     findAll() {

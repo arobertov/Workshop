@@ -12,6 +12,7 @@
                 {{ error }}
             </div>
         </div>
+
         <div v-else-if="!hasArticles" class="row col">
             Няма побликувана статия !
         </div>
@@ -37,7 +38,7 @@
                     </td>
                     <td>{{article.dateCreated | formatDate }}</td>
                     <td>{{article.author  }}</td>
-                    <td>Kat</td>
+                    <td>{{ article.category.name }}</td>
                     <td>
                         <div v-for="tag in article.tags">
                                 {{tag.name}}
@@ -53,10 +54,8 @@
 </template>
 
 <script>
-    import Post from "../../components/Post";
     export default {
         name: "Article-index",
-        components: { Post },
         data(){
             return{
                 message: ''
@@ -66,7 +65,6 @@
             isLoading() {
                 return this.$store.getters["articleMod/isLoading"];
             },
-
             hasError() {
                 return this.$store.getters["articleMod/hasError"];
             },
@@ -83,14 +81,6 @@
     created() {
         this.$store.dispatch("articleMod/findAll");
     },
-    methods: {
-        async createArticle() {
-            const result = await this.$store.dispatch("articleMod/create", this.$data.message);
-            if (result !== null) {
-                this.$data.message = "";
-            }
-        }
-    }
     };
 </script>
 

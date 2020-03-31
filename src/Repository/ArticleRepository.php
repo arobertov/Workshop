@@ -66,11 +66,15 @@ class ArticleRepository extends ServiceEntityRepository
     public function findAllArticles()
     {
 
-        $query = $this->em->createQuery('
-            SELECT a FROM App\Entity\Article a JOIN a.tags t WHERE a.tags IS NULL
-        ');
+        $query = $this->createQueryBuilder('a')
+            ->select('a','tags','cat')
+            ->leftJoin('a.tags','tags')
+            ->join('a.category','cat')
+            ->where('SIZE (a.tags) = 0')
+            ->orWhere('tags.id <> 0')
+            ->getQuery();
 
-        return $query->getResult();
+        return $query->getArrayResult();
     }
 
 }

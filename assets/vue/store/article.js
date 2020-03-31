@@ -12,7 +12,7 @@ export default {
     state: {
         isLoading: false,
         error: null,
-        articles: []
+        articles: [],
     },
     getters: {
         isLoading(state) {
@@ -63,10 +63,10 @@ export default {
         }
     },
     actions: {
-        async create({ commit }, message) {
+        async create({ commit }, articleFormData) {
             commit(CREATING_ARTICLE);
             try {
-                let response = await ArticleAPI.create(message);
+                let response = await ArticleAPI.create(articleFormData);
                 commit(CREATING_ARTICLE_SUCCESS, response.data);
                 return response.data;
             } catch (error) {

@@ -64,6 +64,18 @@ class ArticleController extends AbstractController
     }
 
     /**
+     * @Route("/create/new", name="article_create")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function createNewArticle(Request $request)
+    {
+        $message = $request->request->get('form_data');
+
+       return new JsonResponse($message,Response::HTTP_INTERNAL_SERVER_ERROR,[],true) ;
+    }
+
+    /**
      * @IsGranted("ROLE_EDITOR")
      * @Route("article/new", name="article_new", methods={"GET","POST"})
      * @param Request $request
