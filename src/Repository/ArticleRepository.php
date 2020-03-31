@@ -65,12 +65,12 @@ class ArticleRepository extends ServiceEntityRepository
 
     public function findAllArticles()
     {
-        $qb = $this->em->createQueryBuilder();
-        $query = $qb->select('t','articles')
-            ->from(Tag::class,'t')
-            ->innerJoin('t.articles','articles')
-            ->getQuery();
-        return $query->getArrayResult();
+
+        $query = $this->em->createQuery('
+            SELECT a FROM App\Entity\Article a JOIN a.tags t WHERE a.tags IS NULL
+        ');
+
+        return $query->getResult();
     }
 
 }
