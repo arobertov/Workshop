@@ -38,7 +38,12 @@
                     <td>{{article.dateCreated | formatDate }}</td>
                     <td>{{article.author  }}</td>
                     <td>Kat</td>
-                    <td>tag</td>
+                    <td>
+                        <div v-for="tag in article.tags">
+                                {{tag.name}}
+                        </div>
+                    </td>
+
                     <td>{{article.isPublished ? 'Публикувана':'Непубикувана'}}</td>
                 </tr>
             </table>

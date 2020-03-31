@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Article;
+use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
@@ -65,10 +66,9 @@ class ArticleRepository extends ServiceEntityRepository
     public function findAllArticles()
     {
         $qb = $this->em->createQueryBuilder();
-        $query = $qb->select('a','tags')
-            ->from(Article::class,'a')
-            ->join('a.tags','tags')
-            ->orderBy('a.dateEdit','DESC')
+        $query = $qb->select('t','articles')
+            ->from(Tag::class,'t')
+            ->innerJoin('t.articles','articles')
             ->getQuery();
         return $query->getArrayResult();
     }
