@@ -7,12 +7,12 @@
             <form name="article" method="post">
                 <div id="article">
                     <div class="form-group row"><label class="col-form-label col-sm-2" for="article_title">Title</label>
-                        <div class="col-sm-10"><input type="text" id="article_title" name="article[title]"
+                        <div class="col-sm-10"><input v-model="title" type="text" id="article_title" name="article[title]"
                                                       class="form-control"></div>
                     </div>
                     <div class="form-group row"><label class="col-form-label col-sm-2"
                                                        for="article_contents">Contents</label>
-                        <div class="col-sm-10"><textarea  id="article_contents" name="article[contents]"
+                        <div class="col-sm-10"><textarea v-model="content" id="article_contents" name="article[contents]"
                                                          class="form-control"></textarea></div>
                     </div>
                     <div class="form-group row"><label class="col-form-label col-sm-2" for="article_images">Images</label>
@@ -20,7 +20,7 @@
                                                        multiple="multiple"></select></div>
                     </div>
                     <div class="form-group row"><label class="col-form-label col-sm-2" for="article_tags">Tags</label>
-                        <div class="col-sm-10"><select v-model="tags" id="article_tags" name="article[tags][]" class="form-control"
+                        <div class="col-sm-10"><select  id="article_tags" name="article[tags][]" class="form-control"
                                                        multiple="multiple">
                             <option value="1">Tag 1</option>
                             <option value="2">Tag 2</option>
@@ -31,7 +31,7 @@
                     <div class="form-group row"><label class="col-form-label col-sm-2"
                                                        for="article_category">Category</label>
                         <div class="col-sm-10">
-                            <select v-model="category" id="article_category" name="article[category]" class="form-control">
+                            <select  id="article_category" name="article[category]" class="form-control">
                                 <option value="1">Category 1</option>
                                 <option value="2">Category 2</option>
                                 <option value="3">Category 3</option>
@@ -42,7 +42,7 @@
                     <div class="form-group row">
                         <div class="col-sm-2"></div>
                         <div class="col-sm-10">
-                            <div class="form-check"><input v-model="isPublished" type="checkbox" id="article_isPublished"
+                            <div class="form-check"><input type="checkbox" id="article_isPublished"
                                                            name="article[isPublished]" class="form-check-input" value="1">
                                 <label class="form-check-label" for="article_isPublished">Is published</label></div>
                         </div>
@@ -57,18 +57,22 @@
 </template>
 
 <script>
+    import { createHelpers } from 'vuex-map-fields';
+    const { mapFields } = createHelpers({
+        getterType: 'articleMod/getArticleField',
+        mutationType: 'articleMod/updateArticleField',
+    });
     export default {
         name: "Article-new",
         data(){
             return{
-                form_data: 'some'
+                form_data: 'some',
             }
         },
         computed: {
             isLoading() {
                 return this.$store.getters["articleMod/isLoading"];
             },
-
             hasError() {
                 return this.$store.getters["articleMod/hasError"];
             },
@@ -81,13 +85,18 @@
             articles() {
                 return this.$store.getters["articleMod/articles"];
             },
+            ...mapFields([
+                'title',
+                'content',
+            ]),
         },
         methods: {
             async createArticle(event) {
                 if (event) {
                     event.preventDefault()
                 }
-                const result = await this.$store.dispatch("articleMod/create", this.$data.form_data);
+                console.log(this.$store.state.article);
+                const result = await this.$store.dispatch("articleMod/create", this.$store.getters["articleMod/getArticleField"]);
                 if (result !== null) {
                     this.$data.form_data = "";
                 }

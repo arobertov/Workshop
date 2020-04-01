@@ -1,4 +1,5 @@
 import ArticleAPI from "../api/article";
+import { getField, updateField } from 'vuex-map-fields';
 
 const CREATING_ARTICLE = "CREATING_ARTICLE",
     CREATING_ARTICLE_SUCCESS = "CREATING_ARTICLE_SUCCESS",
@@ -13,8 +14,15 @@ export default {
         isLoading: false,
         error: null,
         articles: [],
+        article:{
+            title: '',
+            content: '',
+        }
     },
     getters: {
+        getArticleField(state){
+            return getField(state.article)
+        },
         isLoading(state) {
             return state.isLoading;
         },
@@ -32,6 +40,9 @@ export default {
         }
     },
     mutations: {
+        updateArticleField(state, field) {
+            updateField(state.article, field);
+        },
         [CREATING_ARTICLE](state) {
             state.isLoading = true;
             state.error = null;
