@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -64,15 +65,19 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/create/new", name="article_create")
+     * @Route("/create/new", name="article_create",methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      */
     public function createNewArticle(Request $request)
     {
-        $message = $request->request->get('form_data');
+        $formData = json_decode($request->getContent(),true);
+        $article = $this->serializer->deserialize($request->getContent(),Article::class,'json');
+        dump($article);
 
-       return new JsonResponse($message,Response::HTTP_INTERNAL_SERVER_ERROR,[],true) ;
+
+        $data = 'ok';//$this->serializer->serialize($article,'json');
+        return new JsonResponse($data,Response::HTTP_OK,[],true) ;
     }
 
     /**

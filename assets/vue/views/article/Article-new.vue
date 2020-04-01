@@ -95,8 +95,8 @@
                 if (event) {
                     event.preventDefault()
                 }
-                console.log(this.$store.state.article);
-                const result = await this.$store.dispatch("articleMod/create", this.$store.getters["articleMod/getArticleField"]);
+                console.log(this.$store.state.articleMod.article);
+                const result = await this.$store.dispatch("articleMod/create", this.$store.state.articleMod.article);
                 if (result !== null) {
                     this.$data.form_data = "";
                 }
