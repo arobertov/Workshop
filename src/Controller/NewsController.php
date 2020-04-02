@@ -52,7 +52,7 @@ class NewsController extends AbstractController
         $news = new News($this->currentUser);
         $form = $this->createForm(NewsType::class, $news);
         $form->handleRequest($request);
-
+        dump($request->getContent());
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($news);

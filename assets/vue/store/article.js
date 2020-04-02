@@ -16,7 +16,10 @@ export default {
         articles: [],
         article:{
             title: '',
-            content: '',
+            contents: '',
+            tags: [],
+            category: '',
+            isPublished:'',
         }
     },
     getters: {

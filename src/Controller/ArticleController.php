@@ -5,8 +5,10 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Entity\User;
 use App\Form\ArticleType;
+use App\Form\FormHandler;
 use App\Repository\ArticleRepository;
 use Exception;
+use http\Exception\InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,6 +19,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -33,10 +39,13 @@ class ArticleController extends AbstractController
     /** @var SerializerInterface */
     private $serializer;
 
-    public  function  __construct(Security $security,SerializerInterface $serializer)
+    private $formHandler;
+
+    public  function  __construct(Security $security,SerializerInterface $serializer,FormHandler $formHandler)
     {
         $this->currentUser = $security->getUser();
         $this->serializer = $serializer;
+        $this->formHandler = $formHandler;
     }
 
     /**
@@ -68,16 +77,24 @@ class ArticleController extends AbstractController
      * @Route("/create/new", name="article_create",methods={"POST"})
      * @param Request $request
      * @return JsonResponse
+     * @throws Exception
      */
     public function createNewArticle(Request $request)
     {
-        $formData = json_decode($request->getContent(),true);
-        $article = $this->serializer->deserialize($request->getContent(),Article::class,'json');
-        dump($article);
+        $requestData = json_decode($request->getContent(),true,512,JSON_OBJECT_AS_ARRAY);
+
+        $handled = $this->formHandler->handleWithSubmit($requestData["form_data"], ArticleType::class, new Article());
 
 
-        $data = 'ok';//$this->serializer->serialize($article,'json');
-        return new JsonResponse($data,Response::HTTP_OK,[],true) ;
+        foreach ($handled->getTags() as $tag){
+            $handled->addTag($tag);
+        }
+        $handled->setAuthor($this->currentUser->getAlias());
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($handled);
+        $entityManager->flush();
+        $message = 'Статията бе публикувана успешно !';
+        return new JsonResponse($message,Response::HTTP_OK,[],true) ;
     }
 
     /**

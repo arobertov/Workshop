@@ -16,9 +16,7 @@ class ArticleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title',TextType::class,[
-                'attr'=>['pattern'=>false]
-            ])
+            ->add('title',TextType::class)
             ->add('contents')
             ->add('images')
             ->add('tags',EntityType::class,[
@@ -38,7 +36,7 @@ class ArticleType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Article::class,
-            'required'=>false
+            'csrf_protection' => false,
         ]);
     }
 }
