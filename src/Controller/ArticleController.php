@@ -26,7 +26,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * @Route("/api")
+ * @Route("/")
  */
 class ArticleController extends AbstractController
 {
@@ -49,7 +49,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/list/index", name="article_index", methods={"GET"})
+     * @Route("/article/list/index", name="article_index", methods={"GET"})
      * @param ArticleRepository $articleRepository
      * @return Response
      */
@@ -61,7 +61,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/index" ,name="admin_article_index")
+     * @Route("api/index" ,name="admin_article_index")
      * @param ArticleRepository $articleRepository
      * @return JsonResponse
      * @throws Exception
@@ -74,25 +74,48 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/create/new", name="article_create",methods={"POST"})
+     * @Route("api/create/new", name="article_create",methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      * @throws Exception
      */
     public function createNewArticle(Request $request)
     {
-        $requestData = json_decode($request->getContent(),true,512,JSON_OBJECT_AS_ARRAY);
+        $article = new Article();
+        $requestData = json_decode($request->getContent(),true);
+        $article->setAuthor($this->currentUser->getAlias());
+        $form = $this->createForm(ArticleType::class,$article);
+        $form->submit($requestData["form_data"]);
 
-        $handled = $this->formHandler->handleWithSubmit($requestData["form_data"], ArticleType::class, new Article());
 
-
-        foreach ($handled->getTags() as $tag){
-            $handled->addTag($tag);
+        dump($form->all());
+        /**
+        foreach ($requestData["form_data"]["tags"] as $tag){
+            $article->addTag($tag);
+        }try {
+        $handled = $this->formHandler->handleWithSubmit($requestData["form_data"], ArticleType::class, $article);
+        } catch (Exception $e){
+        return new JsonResponse($e->getMessage(),RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
         }
-        $handled->setAuthor($this->currentUser->getAlias());
+        try{
+        if($handled instanceof Article){
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($handled);
         $entityManager->flush();
+        } else {
+        dump('v2',$handled);
+        return new JsonResponse('is no ok',RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
+        }
+
+        } catch (Exception $e){
+        return new JsonResponse($e->getMessage(),RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
+        }
+         * */
+
+
+
+
+
         $message = 'Статията бе публикувана успешно !';
         return new JsonResponse($message,Response::HTTP_OK,[],true) ;
     }
@@ -121,7 +144,6 @@ class ArticleController extends AbstractController
 
             return $this->redirectToRoute('article_index');
         }
-
         return $this->render('article/new.html.twig', [
             'article' => $article,
             'form' => $form->createView(),

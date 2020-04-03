@@ -16,14 +16,14 @@ class FormHandler
         $this->formFactory = $formFactory;
     }
 
-    public function handleWithSubmit(
-        array $data,
-        string $type,
-        $entity,
-        array $options = []
-    ) {
-        $form = $this->formFactory->create($type, $entity, $options);
-        $form->submit($data);
+    public function handleWithSubmit(array $data, string $type, $entity, array $options = [])
+    {
+        try {
+            $form = $this->formFactory->create($type, $entity, $options);
+            $form->submit($data);
+        } catch (\Exception $e){
+            return $e->getMessage();
+        }
 
         return $this->processSubmitted($form, $entity);
     }

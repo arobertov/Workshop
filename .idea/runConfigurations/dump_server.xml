@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="dump server" type="PhpLocalRunConfigurationType" factoryName="PHP Console" singleton="false" path="$PROJECT_DIR$/bin/console" scriptParameters="server:dump --format=html &gt; dump.html">
+    <method v="2" />
+  </configuration>
+</component>
