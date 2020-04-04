@@ -72,6 +72,7 @@ class ArticleRepository extends ServiceEntityRepository
             ->join('a.category','cat')
             ->where('SIZE (a.tags) = 0')
             ->orWhere('tags.id <> 0')
+            ->orderBy('a.dateEdit','DESC')
             ->getQuery();
 
         return $query->getArrayResult();

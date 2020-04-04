@@ -30,9 +30,14 @@ class FormHandler
 
     private function processSubmitted(FormInterface $form, $entity)
     {
-
+        /* handle form error */
         if (!$form->isValid()) {
-            return $form;
+            $result =[];
+            foreach ($form->getErrors(true,false) as $error){
+                $fieldName = $error->current()->getOrigin()->getName();
+                $result[$fieldName] = $error->current()->getMessage() ;
+            }
+            return $result;
         }
 
         if (!is_object($entity)) {

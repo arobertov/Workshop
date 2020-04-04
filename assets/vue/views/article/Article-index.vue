@@ -13,6 +13,11 @@
             </div>
         </div>
 
+            <div v-else-if="responseData" class="alert alert-success">
+                 {{responseData}}
+            </div>
+
+
         <div v-else-if="!hasArticles" class="row col">
             Няма побликувана статия !
         </div>
@@ -62,6 +67,9 @@
             }
         },
         computed: {
+            responseData(){
+                return this.$store.getters["articleMod/getResponseData"];
+            },
             isLoading() {
                 return this.$store.getters["articleMod/isLoading"];
             },

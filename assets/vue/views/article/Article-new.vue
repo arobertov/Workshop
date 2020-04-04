@@ -3,13 +3,16 @@
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2 caption-text">Създай статия</h1>
         </div>
-        <div class="row col">
+        <div v-if="error" class="alert alert-danger">
             {{error}}
         </div>
+
         <div class="container-sm ">
             <form name="article" method="post">
                 <div id="article">
-                    <div class="form-group row"><label class="col-form-label col-sm-2" for="article_title">Title</label>
+                    <div class="badge badge-danger" v-if="error.title"> {{error.title}}</div>
+                    <div class="form-group row">
+                        <label class="col-form-label col-sm-2" for="article_title">Title</label>
                         <div class="col-sm-10"><input v-model="title" type="text" id="article_title" name="article[title]"
                                                       class="form-control"></div>
                     </div>
@@ -67,12 +70,10 @@
     });
     export default {
         name: "Article-new",
-        data(){
-            return{
-                form_data: 'some',
-            }
-        },
         computed: {
+            responseData(){
+                return this.$store.getters["articleMod/getResponseData"];
+            },
             isLoading() {
                 return this.$store.getters["articleMod/isLoading"];
             },
@@ -101,10 +102,11 @@
                 if (event) {
                     event.preventDefault()
                 }
-                console.log(this.$store.state.articleMod.article);
+                //console.log(this.$store.state.articleMod.article);
                 const result = await this.$store.dispatch("articleMod/create", this.$store.state.articleMod.article);
+                console.log(result);
                 if (result !== null) {
-                    this.$data.form_data = "";
+                    await this.$router.push("/articles/list-all")
                 }
             }
         }

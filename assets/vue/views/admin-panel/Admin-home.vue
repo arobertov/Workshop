@@ -4,7 +4,7 @@
         <h1 class="h2 caption-text">Главна страница</h1>
     </div>
         <div class="row">
-            <router-link class="col-md-4 mb-3" tag="div" to="/article/new-article">
+            <router-link class="col-md-4 mb-3" tag="div" to="/articles/new-article">
                 <a href="#" class="btn add-btn bg-sub-caption btn-lg btn-block btn-huge">
                     <span class="mr-3"><i class="fas fa-plus-square"></i></span>Създай статия
                 </a>

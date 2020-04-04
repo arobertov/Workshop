@@ -11,8 +11,8 @@ export default new VueRouter({
     mode: "history",
     routes: [
         { path: "/admin", component: Adm },
-        { path:"/article/list-all", component: ArticleIndex},
-        { path:"/article/new-article", component: NewArticle},
+        { path:"/articles/list-all", component: ArticleIndex},
+        { path:"/articles/new-article", component: NewArticle},
         { path:"/tag/list-all", component: TagIndex},
         { path: "*", redirect: "/" }
     ]

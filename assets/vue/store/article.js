@@ -6,13 +6,17 @@ const CREATING_ARTICLE = "CREATING_ARTICLE",
     CREATING_ARTICLE_ERROR = "CREATING_ARTICLE_ERROR",
     FETCHING_ARTICLES = "FETCHING_ARTICLES",
     FETCHING_ARTICLES_SUCCESS = "FETCHING_ARTICLES_SUCCESS",
-    FETCHING_ARTICLES_ERROR = "FETCHING_ARTICLES_ERROR";
+    FETCHING_ARTICLES_ERROR = "FETCHING_ARTICLES_ERROR",
+    FETCHING_SUCCESS_MESSAGE = "FETCHING_SUCCESS_MESSAGE";
 
 export default {
     namespaced: true,
     state: {
         isLoading: false,
-        error: null,
+        error: {
+            title: null ,
+            contents: null
+        },
         articles: [],
         article:{
             title: '',
@@ -20,9 +24,13 @@ export default {
             tags: [],
             category: '',
             isPublished:'',
-        }
+        },
+        responseData:''
     },
     getters: {
+        getResponseData(state){
+            return state.responseData;
+        },
         getArticleField(state){
             return getField(state.article)
         },
@@ -69,11 +77,15 @@ export default {
             state.isLoading = false;
             state.error = null;
             state.articles = articles;
+
         },
         [FETCHING_ARTICLES_ERROR](state, error) {
             state.isLoading = false;
             state.error = error;
             state.articles = [];
+        },
+        [FETCHING_SUCCESS_MESSAGE](state,responseData){
+            state.responseData = responseData;
         }
     },
     actions: {
@@ -82,9 +94,10 @@ export default {
             try {
                 let response = await ArticleAPI.create(articleFormData);
                 commit(CREATING_ARTICLE_SUCCESS, response.data);
+                commit(FETCHING_SUCCESS_MESSAGE,response.data);
                 return response.data;
             } catch (error) {
-                commit(CREATING_ARTICLE_ERROR, error);
+                commit(CREATING_ARTICLE_ERROR, error.response.data);
                 return null;
             }
         },

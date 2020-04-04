@@ -84,40 +84,41 @@ class ArticleController extends AbstractController
         $article = new Article();
         $requestData = json_decode($request->getContent(),true);
         $article->setAuthor($this->currentUser->getAlias());
-        $form = $this->createForm(ArticleType::class,$article);
-        $form->submit($requestData["form_data"]);
-
-
-        dump($form->all());
         /**
-        foreach ($requestData["form_data"]["tags"] as $tag){
-            $article->addTag($tag);
-        }try {
+        $form = $this->createForm(ArticleType::class,$article);
+
+        $form->submit($requestData["form_data"]);
+        if($form->isSubmitted() && $form->isValid()){
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($article);
+            $entityManager->flush();
+            dump($form->all());
+            $message = 'Статията бе публикувана успешно !';
+            return new JsonResponse($message,Response::HTTP_OK,[],true) ;
+        }
+
+       return new JsonResponse('error',Response::HTTP_INTERNAL_SERVER_ERROR,[],'json');
+        */
+
         $handled = $this->formHandler->handleWithSubmit($requestData["form_data"], ArticleType::class, $article);
-        } catch (Exception $e){
-        return new JsonResponse($e->getMessage(),RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
-        }
+        dump($handled);
         try{
-        if($handled instanceof Article){
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($handled);
-        $entityManager->flush();
-        } else {
-        dump('v2',$handled);
-        return new JsonResponse('is no ok',RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
-        }
-
+            if($handled instanceof Article) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($handled);
+                $entityManager->flush();
+            }
+            else {
+                return new JsonResponse(json_encode($handled),RESPONSE::HTTP_UNPROCESSABLE_ENTITY,[],'json');
+            }
         } catch (Exception $e){
-        return new JsonResponse($e->getMessage(),RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
+             return new JsonResponse($e->getMessage(),RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
         }
-         * */
-
-
-
 
 
         $message = 'Статията бе публикувана успешно !';
         return new JsonResponse($message,Response::HTTP_OK,[],true) ;
+
     }
 
     /**
@@ -151,7 +152,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="article_show", methods={"GET"})
+     * @Route("article/{id}", name="article_show", methods={"GET"})
      * @param Article $article
      * @return Response
      */
@@ -163,7 +164,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="article_edit", methods={"GET","POST"})
+     * @Route("article/{id}/edit", name="article_edit", methods={"GET","POST"})
      * @param Request $request
      * @param Article $article
      * @return Response
@@ -189,7 +190,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="article_delete", methods={"DELETE"})
+     * @Route("article/{id}", name="article_delete", methods={"DELETE"})
      * @param Request $request
      * @param Article $article
      * @return Response
