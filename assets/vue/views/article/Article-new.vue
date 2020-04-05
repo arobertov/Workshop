@@ -3,19 +3,22 @@
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
             <h1 class="h2 caption-text">Създай статия</h1>
         </div>
-        <div v-if="error" class="alert alert-danger">
-            {{error}}
+        <div v-if="error"  class="alert alert-danger">
+            {{ error }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
 
         <div class="container-sm ">
             <form name="article" method="post">
                 <div id="article">
-                    <div class="badge badge-danger" v-if="error.title"> {{error.title}}</div>
+                    <div class="badge badge-danger" v-if="formErrors.title"> {{formErrors.title}}</div>
                     <div class="form-group row">
                         <label class="col-form-label col-sm-2" for="article_title">Title</label>
-                        <div class="col-sm-10"><input v-model="title" type="text" id="article_title" name="article[title]"
-                                                      class="form-control"></div>
+                        <div class="col-sm-10"><input v-model="title" type="text" id="article_title" name="article[title]" class="form-control"></div>
                     </div>
+                    <div class="badge badge-danger" v-if="formErrors.contents"> {{formErrors.contents}}</div>
                     <div class="form-group row"><label class="col-form-label col-sm-2"
                                                        for="article_contents">Contents</label>
                         <div class="col-sm-10"><textarea v-model="contents" id="article_contents" name="article[contents]"
@@ -38,10 +41,7 @@
                                                        for="article_category">Category</label>
                         <div class="col-sm-10">
                             <select v-model="category"  id="article_category" name="article[category]" class="form-control">
-                                <option value="1">Category 1</option>
-                                <option value="2">Category 2</option>
-                                <option value="3">Category 3</option>
-                                <option value="4">Category 4</option>
+                                <option v-for="category in categories" v-bind:value="category.id" >{{category.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -83,11 +83,17 @@
             error() {
                 return this.$store.getters["articleMod/error"];
             },
+            formErrors(){
+                return this.$store.getters["articleMod/formErrors"];
+            },
             hasArticles() {
                 return this.$store.getters["articleMod/hasArticles"];
             },
             articles() {
                 return this.$store.getters["articleMod/articles"];
+            },
+            categories(){
+                return this.$store.getters["categoryMod/getCategories"];
             },
             ...mapFields([
                 'title',
@@ -97,6 +103,13 @@
                 'isPublished'
             ]),
         },
+        created(){
+            let store = this.$store
+            let result = this.$store.dispatch("categoryMod/findAllCategories");
+            result.then(function (e) {
+               store.commit("articleMod/updateCategoryField",e[0].id);
+            })
+        },
         methods: {
             async createArticle(event) {
                 if (event) {
@@ -104,7 +117,6 @@
                 }
                 //console.log(this.$store.state.articleMod.article);
                 const result = await this.$store.dispatch("articleMod/create", this.$store.state.articleMod.article);
-                console.log(result);
                 if (result !== null) {
                     await this.$router.push("/articles/list-all")
                 }

@@ -3,26 +3,19 @@
 namespace App\Controller;
 
 use App\Entity\Article;
-use App\Entity\User;
 use App\Form\ArticleType;
 use App\Form\FormHandler;
 use App\Repository\ArticleRepository;
 use Exception;
-use http\Exception\InvalidArgumentException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -31,14 +24,13 @@ use Symfony\Component\Serializer\SerializerInterface;
 class ArticleController extends AbstractController
 {
 
-    /**
-     * @var UserInterface|null
-     */
+    /** @var UserInterface|null */
     private $currentUser;
 
     /** @var SerializerInterface */
     private $serializer;
 
+    /** @var FormHandler  */
     private $formHandler;
 
     public  function  __construct(Security $security,SerializerInterface $serializer,FormHandler $formHandler)
@@ -84,24 +76,8 @@ class ArticleController extends AbstractController
         $article = new Article();
         $requestData = json_decode($request->getContent(),true);
         $article->setAuthor($this->currentUser->getAlias());
-        /**
-        $form = $this->createForm(ArticleType::class,$article);
-
-        $form->submit($requestData["form_data"]);
-        if($form->isSubmitted() && $form->isValid()){
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($article);
-            $entityManager->flush();
-            dump($form->all());
-            $message = 'Статията бе публикувана успешно !';
-            return new JsonResponse($message,Response::HTTP_OK,[],true) ;
-        }
-
-       return new JsonResponse('error',Response::HTTP_INTERNAL_SERVER_ERROR,[],'json');
-        */
 
         $handled = $this->formHandler->handleWithSubmit($requestData["form_data"], ArticleType::class, $article);
-        dump($handled);
         try{
             if($handled instanceof Article) {
                 $entityManager = $this->getDoctrine()->getManager();
@@ -112,7 +88,7 @@ class ArticleController extends AbstractController
                 return new JsonResponse(json_encode($handled),RESPONSE::HTTP_UNPROCESSABLE_ENTITY,[],'json');
             }
         } catch (Exception $e){
-             return new JsonResponse($e->getMessage(),RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
+             return new JsonResponse('Въвели сте непълни или некоректни данни !',RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
         }
 
 

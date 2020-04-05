@@ -7,20 +7,18 @@
             <p>Зареждане...</p>
         </div>
 
-        <div v-else-if="hasError" class="row col">
-            <div class="alert alert-danger" role="alert">
-                {{ error }}
-            </div>
+        <div v-else-if="hasError" class="alert alert-danger" role="alert">
+            {{ error }}
         </div>
 
-            <div v-else-if="responseData" class="alert alert-success">
-                 {{responseData}}
-            </div>
-
+        <div v-else-if="responseData" id="response-data-field" class="alert alert-success">
+            {{responseData}}
+        </div>
 
         <div v-else-if="!hasArticles" class="row col">
-            Няма побликувана статия !
+            Няма публикувана статия !
         </div>
+
         <div class="container-md bg-white">
             <table class="table table-hover">
                 <thead>
@@ -49,23 +47,16 @@
                                 {{tag.name}}
                         </div>
                     </td>
-
                     <td>{{article.isPublished ? 'Публикувана':'Непубикувана'}}</td>
                 </tr>
             </table>
         </div>
-
     </div>
 </template>
 
 <script>
     export default {
         name: "Article-index",
-        data(){
-            return{
-                message: ''
-            }
-        },
         computed: {
             responseData(){
                 return this.$store.getters["articleMod/getResponseData"];

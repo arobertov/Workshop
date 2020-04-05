@@ -7,17 +7,41 @@ use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
- * @Route("/category")
+ * @Route("/")
  */
 class CategoryController extends AbstractController
 {
     /**
-     * @Route("/", name="category_index", methods={"GET"})
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
+    /**
+     * @Route("api/category/index",name="all_categories")
+     * @param CategoryRepository $categoryRepository
+     * @return JsonResponse
+     */
+    public function allCategories(CategoryRepository $categoryRepository){
+        $categories = $categoryRepository->findAllCategories();
+        $data = $this->serializer->serialize($categories,JsonEncoder::FORMAT);
+        return new JsonResponse($data,Response::HTTP_OK,[],'json');
+    }
+
+    /**
+     * @Route("category", name="category_index", methods={"GET"})
      * @param CategoryRepository $categoryRepository
      * @return Response
      */
@@ -30,7 +54,7 @@ class CategoryController extends AbstractController
 
     /**
      * @IsGranted("ROLE_EDITOR")
-     * @Route("/new", name="category_new", methods={"GET","POST"})
+     * @Route("category/new", name="category_new", methods={"GET","POST"})
      * @param Request $request
      * @return Response
      */
@@ -56,7 +80,7 @@ class CategoryController extends AbstractController
 
     /**
      * @IsGranted("ROLE_EDITOR")
-     * @Route("/{id}", name="category_show", methods={"GET"})
+     * @Route("category/{id}", name="category_show", methods={"GET"})
      * @param Category $category
      * @return Response
      */
@@ -69,7 +93,7 @@ class CategoryController extends AbstractController
 
     /**
      * @IsGranted("ROLE_EDITOR")
-     * @Route("/{id}/edit", name="category_edit", methods={"GET","POST"})
+     * @Route("category/{id}/edit", name="category_edit", methods={"GET","POST"})
      * @param Request $request
      * @param Category $category
      * @return Response
@@ -93,7 +117,7 @@ class CategoryController extends AbstractController
 
     /**
      * @IsGranted("ROLE_EDITOR")
-     * @Route("/{id}", name="category_delete", methods={"DELETE"})
+     * @Route("category/{id}", name="category_delete", methods={"DELETE"})
      * @param Request $request
      * @param Category $category
      * @return Response

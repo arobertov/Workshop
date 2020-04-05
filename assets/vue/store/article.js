@@ -1,4 +1,4 @@
-import ArticleAPI from "../api/article";
+import ArticleAPI from "../api/article_api";
 import { getField, updateField } from 'vuex-map-fields';
 
 const CREATING_ARTICLE = "CREATING_ARTICLE",
@@ -7,15 +7,17 @@ const CREATING_ARTICLE = "CREATING_ARTICLE",
     FETCHING_ARTICLES = "FETCHING_ARTICLES",
     FETCHING_ARTICLES_SUCCESS = "FETCHING_ARTICLES_SUCCESS",
     FETCHING_ARTICLES_ERROR = "FETCHING_ARTICLES_ERROR",
-    FETCHING_SUCCESS_MESSAGE = "FETCHING_SUCCESS_MESSAGE";
+    FETCHING_SUCCESS_MESSAGE = "FETCHING_SUCCESS_MESSAGE",
+    FETCHING_FORM_ERRORS = "FETCHING_FORM_ERRORS";
 
 export default {
     namespaced: true,
     state: {
         isLoading: false,
-        error: {
-            title: null ,
-            contents: null
+        error: null,
+        formErrors:{
+            title: '' ,
+            contents: ''
         },
         articles: [],
         article:{
@@ -40,6 +42,9 @@ export default {
         hasError(state) {
             return state.error !== null;
         },
+        formErrors(state){
+            return state.formErrors;
+        },
         error(state) {
             return state.error;
         },
@@ -54,9 +59,11 @@ export default {
         updateArticleField(state, field) {
             updateField(state.article, field);
         },
+        updateCategoryField(state,category){
+            state.article.category = category;
+        },
         [CREATING_ARTICLE](state) {
             state.isLoading = true;
-            state.error = null;
         },
         [CREATING_ARTICLE_SUCCESS](state, article) {
             state.isLoading = false;
@@ -65,6 +72,8 @@ export default {
         },
         [CREATING_ARTICLE_ERROR](state, error) {
             state.isLoading = false;
+            state.formErrors.title = '';
+            state.formErrors.contents = '';
             state.error = error;
             state.articles = [];
         },
@@ -81,11 +90,17 @@ export default {
         },
         [FETCHING_ARTICLES_ERROR](state, error) {
             state.isLoading = false;
+
             state.error = error;
             state.articles = [];
         },
         [FETCHING_SUCCESS_MESSAGE](state,responseData){
+            state.error = null;
             state.responseData = responseData;
+        },
+        [FETCHING_FORM_ERRORS](state,error){
+            state.error = null;
+            state.formErrors = error;
         }
     },
     actions: {
@@ -97,7 +112,13 @@ export default {
                 commit(FETCHING_SUCCESS_MESSAGE,response.data);
                 return response.data;
             } catch (error) {
-                commit(CREATING_ARTICLE_ERROR, error.response.data);
+                let errorData = error.response.data;
+                if(errorData.hasOwnProperty('title') || errorData.hasOwnProperty('contents')){
+                    commit(FETCHING_FORM_ERRORS,errorData);
+                } else {
+                    commit(CREATING_ARTICLE_ERROR, errorData);
+                }
+
                 return null;
             }
         },

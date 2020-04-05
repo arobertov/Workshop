@@ -65,16 +65,18 @@ class ArticleRepository extends ServiceEntityRepository
 
     public function findAllArticles()
     {
-
-        $query = $this->createQueryBuilder('a')
-            ->select('a','tags','cat')
-            ->leftJoin('a.tags','tags')
-            ->join('a.category','cat')
-            ->where('SIZE (a.tags) = 0')
-            ->orWhere('tags.id <> 0')
-            ->orderBy('a.dateEdit','DESC')
-            ->getQuery();
-
+        try{
+            $query = $this->createQueryBuilder('a')
+                ->select('a','tags','cat')
+                ->leftJoin('a.tags','tags')
+                ->join('a.category','cat')
+                ->where('SIZE (a.tags) = 0')
+                ->orWhere('tags.id <> 0')
+                ->orderBy('a.dateEdit','DESC')
+                ->getQuery();
+        } catch (\Exception $e){
+            return new \Exception($e->getMessage());
+        }
         return $query->getArrayResult();
     }
 

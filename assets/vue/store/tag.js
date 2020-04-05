@@ -1,4 +1,4 @@
-import TagApi from '../api/tag';
+import TagApi from '../api/tag_api';
 
 export default {
     namespaced: true,
