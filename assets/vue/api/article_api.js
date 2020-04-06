@@ -2,11 +2,22 @@ import axios from "axios";
 
 export default {
     create(articleFormData) {
-        return axios.post("/api/create/new", {
+        return axios.post("/api/article/new", {
             form_data: articleFormData
         });
     },
+    edit(articleId,articleFormData){
+        return axios.post("/api/article/"+articleId+"/edit",{
+            form_data: articleFormData
+        })
+    },
+    show(articleId){
+        return axios.get("/api/article/"+articleId+"/show")
+    },
+    delete(articleId){
+        return axios.delete("/api/article/"+articleId+"/delete");
+    },
     findAll() {
-        return axios.get("/api/index");
+        return axios.get("/api/article/index");
     }
 };

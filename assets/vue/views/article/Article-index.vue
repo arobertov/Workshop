@@ -37,7 +37,14 @@
                     <td>{{article.id}}</td>
                     <td>
                         <div>{{article.title}}</div>
-                        <div>| Преглед | Редакт.| Изтрий |</div>
+                        <div>|
+                            <router-link :to="{name:'admin_article_show',params:{id:article.id}}" tag="a">Прегледай</router-link>
+                            |
+                            <router-link :to="{name:'admin_article_edit',params:{id:article.id}}" tag="a">Редактирай</router-link>
+                            |
+                            <router-link :to="{name:'admin_article_delete',params:{id:article.id}}" tag="a">Изтрий</router-link>
+                            |
+                        </div>
                     </td>
                     <td>{{article.dateCreated | formatDate }}</td>
                     <td>{{article.author  }}</td>

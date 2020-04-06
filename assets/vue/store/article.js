@@ -1,5 +1,6 @@
 import ArticleAPI from "../api/article_api";
 import { getField, updateField } from 'vuex-map-fields';
+import category from "./category";
 
 const CREATING_ARTICLE = "CREATING_ARTICLE",
     CREATING_ARTICLE_SUCCESS = "CREATING_ARTICLE_SUCCESS",
@@ -21,6 +22,7 @@ export default {
         },
         articles: [],
         article:{
+            id: undefined ,
             title: '',
             contents: '',
             tags: [],
@@ -68,6 +70,8 @@ export default {
         [CREATING_ARTICLE_SUCCESS](state, article) {
             state.isLoading = false;
             state.error = null;
+            state.responseData = article;
+            state.article = [];
             state.articles.unshift(article);
         },
         [CREATING_ARTICLE_ERROR](state, error) {
@@ -90,13 +94,8 @@ export default {
         },
         [FETCHING_ARTICLES_ERROR](state, error) {
             state.isLoading = false;
-
             state.error = error;
             state.articles = [];
-        },
-        [FETCHING_SUCCESS_MESSAGE](state,responseData){
-            state.error = null;
-            state.responseData = responseData;
         },
         [FETCHING_FORM_ERRORS](state,error){
             state.error = null;
@@ -109,7 +108,6 @@ export default {
             try {
                 let response = await ArticleAPI.create(articleFormData);
                 commit(CREATING_ARTICLE_SUCCESS, response.data);
-                commit(FETCHING_SUCCESS_MESSAGE,response.data);
                 return response.data;
             } catch (error) {
                 let errorData = error.response.data;
@@ -121,6 +119,9 @@ export default {
 
                 return null;
             }
+        },
+        async edit(){
+
         },
         async findAll({ commit }) {
             commit(FETCHING_ARTICLES);

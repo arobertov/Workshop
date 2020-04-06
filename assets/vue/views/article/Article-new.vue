@@ -118,7 +118,7 @@
                 //console.log(this.$store.state.articleMod.article);
                 const result = await this.$store.dispatch("articleMod/create", this.$store.state.articleMod.article);
                 if (result !== null) {
-                    await this.$router.push("/articles/list-all")
+                    await this.$router.push({name:"admin_article_index"});
                 }
             }
         }

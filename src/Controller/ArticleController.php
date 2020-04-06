@@ -53,7 +53,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("api/index" ,name="admin_article_index")
+     * @Route("api/article/index" ,name="admin_article_index")
      * @param ArticleRepository $articleRepository
      * @return JsonResponse
      * @throws Exception
@@ -66,7 +66,7 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("api/create/new", name="article_create",methods={"POST"})
+     * @Route("api/article/new", name="article_create",methods={"POST"})
      * @param Request $request
      * @return JsonResponse
      * @throws Exception
@@ -95,6 +95,26 @@ class ArticleController extends AbstractController
         $message = 'Статията бе публикувана успешно !';
         return new JsonResponse($message,Response::HTTP_OK,[],true) ;
 
+    }
+
+    /**
+     * @Route("api/article/{id}/show")
+     * @param Article $article
+     * @return JsonResponse
+     */
+    public function showArticle(Article $article){
+        $data = $this->serializer->serialize($article,JsonEncoder::FORMAT);
+        return new JsonResponse($data,Response::HTTP_OK,[],true) ;
+    }
+
+    public function editArticle(){
+        $message = 'Статията бе редактирана успешно !';
+        return new JsonResponse($message,Response::HTTP_OK,[],true) ;
+    }
+
+    public function deleteArticle(){
+        $message = 'Статията бе изтрита успешно !';
+        return new JsonResponse($message,Response::HTTP_OK,[],true) ;
     }
 
     /**

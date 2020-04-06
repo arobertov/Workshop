@@ -6,13 +6,13 @@
             <nav id="aside-menu" class="col-md-2 bg-green sidebar">
                 <div class="sidebar-sticky overflow-hidden">
                     <ul class="nav flex-column">
-                        <router-link class="nav-item" tag="li" to="/admin" active-class="active">
+                        <router-link :to="{ name: 'admin_panel' }" class="nav-item" tag="li" active-class="active">
                             <a class="nav-link" href="#">
                                 <i class="fas fa-users-cog"></i>
                                 Админ панел
                             </a>
                         </router-link>
-                        <router-link :to="{name: 'article_index'}" class="nav-item" tag="li"  active-class="active">
+                        <router-link :to="{ name: 'admin_article_index' }" class="nav-item" tag="li"  active-class="active">
                             <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
                                 <span class="nav-icon"><i class="far fa-newspaper"></i></span>
                                 Статии
