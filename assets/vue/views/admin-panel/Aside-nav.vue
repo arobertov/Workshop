@@ -12,7 +12,7 @@
                                 Админ панел
                             </a>
                         </router-link>
-                        <router-link class="nav-item" tag="li" to="/articles/list-all" active-class="active">
+                        <router-link :to="{name: 'article_index'}" class="nav-item" tag="li"  active-class="active">
                             <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
                                 <span class="nav-icon"><i class="far fa-newspaper"></i></span>
                                 Статии
