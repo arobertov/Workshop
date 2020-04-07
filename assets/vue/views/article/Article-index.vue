@@ -38,7 +38,7 @@
                     <td>
                         <div>{{article.title}}</div>
                         <div>|
-                            <router-link :to="{name:'admin_article_show',params:{id:article.id}}" tag="a">Прегледай</router-link>
+                            <router-link :to="{name:'admin_article_show',params:{id:article.id}}" tag="a" >Прегледай</router-link>
                             |
                             <router-link :to="{name:'admin_article_edit',params:{id:article.id}}" tag="a">Редактирай</router-link>
                             |

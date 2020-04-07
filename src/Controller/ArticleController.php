@@ -8,6 +8,7 @@ use App\Form\FormHandler;
 use App\Repository\ArticleRepository;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 /**
@@ -98,12 +103,19 @@ class ArticleController extends AbstractController
     }
 
     /**
-     * @Route("api/article/{id}/show")
+     * @Route("api/article/{id}/show", name="api_article_show")
      * @param Article $article
+     * @param ArticleRepository $repository
      * @return JsonResponse
+     * @throws Exception
      */
-    public function showArticle(Article $article){
-        $data = $this->serializer->serialize($article,JsonEncoder::FORMAT);
+    public function showArticle(Article $article,ArticleRepository $repository){
+        $encoders = [ new JsonEncoder()];
+        $normalizer = new ObjectNormalizer();
+        $serializer = new Serializer([$normalizer], $encoders);
+        $data = $this->serializer->serialize($article,'json' ,['ignored_attributes' => ['tags'=>['articles'],'category']]
+            );
+        dump($data);
         return new JsonResponse($data,Response::HTTP_OK,[],true) ;
     }
 

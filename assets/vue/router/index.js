@@ -33,10 +33,10 @@
 
 import Vue from "vue";
 import VueRouter from "vue-router";
-import AdminPanel from "../views/admin-panel/Admin-home";
+import AdminPanel from "../views/article/Article";
 import AdminArticleNew from "../views/article/Article-new";
 import AdminArticleIndex from "../views/article/Article-index";
-import AdminArticleShow from "../views/article/Article-show";
+import AdminArticleShow from "../components/Article-show";
 import AdminArticleEdit from "../views/article/Article-edit";
 import AdminArticleDelete from "../views/article/Article-delete"
 import TagIndex from "../views/tag/TagIndex";

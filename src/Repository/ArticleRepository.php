@@ -54,7 +54,11 @@ class ArticleRepository extends ServiceEntityRepository
     {
         try {
             return $this->createQueryBuilder('a')
-                ->andWhere('a.id = :id')
+                ->select('a','tags','cat')
+                ->leftJoin('a.tags','tags')
+                ->join('a.category','cat')
+                ->where('a.id = :id')
+                ->andWhere('tags.id <> 0')
                 ->setParameter('id', $id)
                 ->getQuery()
                 ->getOneOrNullResult();
@@ -62,6 +66,7 @@ class ArticleRepository extends ServiceEntityRepository
             throw new \Exception('No items');
         }
     }
+
 
     public function findAllArticles()
     {

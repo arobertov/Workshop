@@ -2,13 +2,16 @@ import ArticleAPI from "../api/article_api";
 import { getField, updateField } from 'vuex-map-fields';
 import category from "./category";
 
+
 const CREATING_ARTICLE = "CREATING_ARTICLE",
     CREATING_ARTICLE_SUCCESS = "CREATING_ARTICLE_SUCCESS",
     CREATING_ARTICLE_ERROR = "CREATING_ARTICLE_ERROR",
     FETCHING_ARTICLES = "FETCHING_ARTICLES",
+    FETCHING_ARTICLE = "FETCHING_ARTICLE",
+    FETCHING_ARTICLE_SUCCESS = "FETCHING_ARTICLE_SUCCESS",
     FETCHING_ARTICLES_SUCCESS = "FETCHING_ARTICLES_SUCCESS",
     FETCHING_ARTICLES_ERROR = "FETCHING_ARTICLES_ERROR",
-    FETCHING_SUCCESS_MESSAGE = "FETCHING_SUCCESS_MESSAGE",
+    FETCHING_ARTICLE_ERROR = "FETCHING_ARTICLE_ERROR",
     FETCHING_FORM_ERRORS = "FETCHING_FORM_ERRORS";
 
 export default {
@@ -55,6 +58,9 @@ export default {
         },
         articles(state) {
             return state.articles;
+        },
+        article(state){
+            return state.article;
         }
     },
     mutations: {
@@ -92,6 +98,17 @@ export default {
             state.articles = articles;
 
         },
+        [FETCHING_ARTICLE](state) {
+            state.isLoading = true;
+            state.error = null;
+            state.article = [];
+        },
+        [FETCHING_ARTICLE_SUCCESS](state, article) {
+            state.isLoading = false;
+            state.error = null;
+            state.article = article;
+
+        },
         [FETCHING_ARTICLES_ERROR](state, error) {
             state.isLoading = false;
             state.error = error;
@@ -120,7 +137,19 @@ export default {
                 return null;
             }
         },
-        async edit(){
+        async findArticle({commit},articleId){
+            commit(FETCHING_ARTICLE);
+            try{
+                let response = await ArticleAPI.show(articleId);
+                console.log(response.data);
+                commit(FETCHING_ARTICLE_SUCCESS,response.data)
+            }catch (error) {
+                commit(FETCHING_ARTICLE_ERROR,error);
+                return null;
+            }
+        },
+        async edit({commit}){
+
 
         },
         async findAll({ commit }) {
