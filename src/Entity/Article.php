@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception as ExceptionAlias;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
@@ -16,6 +17,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 class Article
 {
     /**
+     * @Groups("article")
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -23,6 +25,7 @@ class Article
     private $id;
 
     /**
+     * @Groups("article")
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
      * @Assert\Length(
@@ -35,43 +38,51 @@ class Article
     private $title;
 
     /**
+     * @Groups("article")
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
      */
     private $contents;
 
     /**
+     * @Groups("article")
      * @ORM\Column(type="datetime")
      */
     private $dateCreated;
 
     /**
+     * @Groups("article")
      * @ORM\Column(type="datetime")
      */
     private $dateEdit;
 
     /**
+     *
      * @ORM\ManyToMany(targetEntity="App\Entity\ArticleImage")
      */
     private $images;
 
     /**
+     * * @Groups("article")
      * @ORM\ManyToMany(targetEntity="App\Entity\Tag", inversedBy="articles")
      */
     private $tags;
 
     /**
+     * * @Groups("article")
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="articles")
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
 
     /**
+     * @Groups("article")
      * @ORM\Column(type="string", length=255)
      */
     private $author;
 
     /**
+     * @Groups("article")
      * @ORM\Column(type="boolean")
      * @param bool
      */

@@ -105,6 +105,7 @@
         },
         created(){
             let store = this.$store
+            store.commit("articleMod/CREATING_ARTICLE");
             let result = this.$store.dispatch("categoryMod/findAllCategories");
             result.then(function (e) {
                store.commit("articleMod/updateCategoryField",e[0].id);

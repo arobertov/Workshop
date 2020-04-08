@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -16,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Category
 {
     /**
+     * @Groups("category")
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -23,6 +25,7 @@ class Category
     private $id;
 
     /**
+     * @Groups("category")
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank()
      * @Assert\Length(
@@ -35,16 +38,19 @@ class Category
     private $name;
 
     /**
+     * @Groups("category_articles")
      * @ORM\OneToMany(targetEntity="App\Entity\Article", mappedBy="category")
      */
     private $articles;
 
     /**
+     * @Groups("category_news")
      * @ORM\OneToMany(targetEntity="App\Entity\News", mappedBy="category")
      */
     private $news;
 
     /**
+     * @Groups("category_sp")
      * @ORM\OneToMany(targetEntity="App\Entity\SpiritualPearls", mappedBy="category")
      */
     private $spiritualPearls;

@@ -8,7 +8,7 @@
 <script>
 
     import { createHelpers } from 'vuex-map-fields';
-    import ArticleShow from "../../components/Article-show";
+    import ArticleShow from "./Article-show";
     const { mapFields } = createHelpers({
         getterType: 'articleMod/getArticleField',
         mutationType: 'articleMod/updateArticleField',

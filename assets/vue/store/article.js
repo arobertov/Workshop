@@ -72,6 +72,7 @@ export default {
         },
         [CREATING_ARTICLE](state) {
             state.isLoading = true;
+            state.article = [];
         },
         [CREATING_ARTICLE_SUCCESS](state, article) {
             state.isLoading = false;
@@ -109,6 +110,11 @@ export default {
             state.article = article;
 
         },
+        [FETCHING_ARTICLE_ERROR](state,error){
+            state.isLoading = false;
+            state.error = error;
+            state.article = [];
+        },
         [FETCHING_ARTICLES_ERROR](state, error) {
             state.isLoading = false;
             state.error = error;
@@ -133,7 +139,6 @@ export default {
                 } else {
                     commit(CREATING_ARTICLE_ERROR, errorData);
                 }
-
                 return null;
             }
         },

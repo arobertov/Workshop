@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
@@ -16,6 +17,7 @@ use Symfony\Component\Serializer\Annotation\MaxDepth;
 class Tag
 {
     /**
+     * @Groups("tag")
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -23,6 +25,7 @@ class Tag
     private $id;
 
     /**
+     * @Groups("tag")
      * @ORM\Column(type="string", length=255, unique=true)
      * @Assert\NotBlank()
      * @Assert\Length(
@@ -35,16 +38,19 @@ class Tag
     private $name;
 
     /**
+     * @Groups("tag_articles")
      * @ORM\ManyToMany(targetEntity="App\Entity\Article", mappedBy="tags")
      */
     private $articles;
 
     /**
+     * @Groups("tag_news")
      * @ORM\ManyToMany(targetEntity="App\Entity\News", mappedBy="tags")
      */
     private $news;
 
     /**
+     * @Groups("tag_sp")
      * @ORM\ManyToMany(targetEntity="App\Entity\SpiritualPearls", mappedBy="tags")
      */
     private $spiritualPearls;

@@ -105,18 +105,21 @@ class ArticleController extends AbstractController
     /**
      * @Route("api/article/{id}/show", name="api_article_show")
      * @param Article $article
-     * @param ArticleRepository $repository
      * @return JsonResponse
      * @throws Exception
      */
-    public function showArticle(Article $article,ArticleRepository $repository){
-        $encoders = [ new JsonEncoder()];
-        $normalizer = new ObjectNormalizer();
-        $serializer = new Serializer([$normalizer], $encoders);
-        $data = $this->serializer->serialize($article,'json' ,['ignored_attributes' => ['tags'=>['articles'],'category']]
-            );
-        dump($data);
-        return new JsonResponse($data,Response::HTTP_OK,[],true) ;
+    public function showArticle(Article $article){
+        try{
+            $data = $this->serializer->serialize($article,'json' ,['groups' => ['article','tag','category']]);
+            dump($data);
+            return new JsonResponse($data,Response::HTTP_OK,[],true) ;
+        }catch (Exception $e){
+            return new JsonResponse($e->getMessage(),RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
+        }
+
+
+
+
     }
 
     public function editArticle(){
