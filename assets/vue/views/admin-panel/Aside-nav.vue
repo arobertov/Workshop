@@ -12,8 +12,8 @@
                                 Админ панел
                             </a>
                         </router-link>
-                        <router-link :to="{ name: 'admin_article_index' }" class="nav-item" tag="li"  active-class="active">
-                            <a class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
+                        <router-link :to="{ name: 'admin_article_index' }" class="nav-item" tag="li" >
+                            <a class="nav-link"  href="#">
                                 <span class="nav-icon"><i class="far fa-newspaper"></i></span>
                                 Статии
                             </a>

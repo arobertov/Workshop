@@ -29,13 +29,15 @@
                                                        multiple="multiple"></select></div>
                     </div>
                     <div class="form-group row"><label class="col-form-label col-sm-2" for="article_tags">Tags</label>
-                        <div class="col-sm-10"><select v-model="tags" id="article_tags" name="article[tags][]" class="form-control"
+                        <div class="col-sm-10">
+                            <select v-model="tags" id="article_tags" name="article[tags][]" class="form-control"
                                                        multiple="multiple">
-                            <option value="1">Tag 1</option>
-                            <option value="2">Tag 2</option>
-                            <option value="3">Tag 3</option>
-                            <option value="4">Tag 4</option>
-                        </select></div>
+                                <option value="1">Tag 1</option>
+                                <option value="2">Tag 2</option>
+                                <option value="3">Tag 3</option>
+                                <option value="4">Tag 4</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-group row"><label class="col-form-label col-sm-2"
                                                        for="article_category">Category</label>
@@ -53,8 +55,6 @@
                                 <label class="form-check-label" for="article_isPublished">Is published</label></div>
                         </div>
                     </div>
-                    <input type="hidden" id="article__token" name="article[_token]"
-                           value="Tr-4TffzjO4NzvSvTYoNc5c_3NiR6nab6eRdrFuWW00">
                     <button class="btn btn-success" @click="createArticle($event)">Save</button>
                 </div>
             </form>
@@ -105,7 +105,7 @@
         },
         created(){
             let store = this.$store
-            store.commit("articleMod/CREATING_ARTICLE");
+
             let result = this.$store.dispatch("categoryMod/findAllCategories");
             result.then(function (e) {
                store.commit("articleMod/updateCategoryField",e[0].id);
@@ -118,6 +118,7 @@
                 }
                 //console.log(this.$store.state.articleMod.article);
                 const result = await this.$store.dispatch("articleMod/create", this.$store.state.articleMod.article);
+                console.log(result);
                 if (result !== null) {
                     await this.$router.push({name:"admin_article_index"});
                 }

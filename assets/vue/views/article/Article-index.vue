@@ -48,7 +48,7 @@
                     </td>
                     <td>{{article.dateCreated | formatDate }}</td>
                     <td>{{article.author  }}</td>
-                    <td>{{ article.category.name }}</td>
+                    <td>{{ article.category}}</td>
                     <td>
                         <div v-for="tag in article.tags">
                                 {{tag.name}}
@@ -85,7 +85,9 @@
             },
         },
     created() {
-        this.$store.dispatch("articleMod/findAll");
+         if(!this.$store.getters["articleMod/hasArticles"]){
+             this.$store.dispatch("articleMod/findAll");
+         }
     },
     };
 </script>

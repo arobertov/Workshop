@@ -88,6 +88,8 @@ class ArticleController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($handled);
                 $entityManager->flush();
+                $data = $this->serializer->serialize($handled,JsonEncoder::FORMAT,['groups' => ['article','tag','category']]);
+                return new JsonResponse($data,Response::HTTP_OK,[],true) ;
             }
             else {
                 return new JsonResponse(json_encode($handled),RESPONSE::HTTP_UNPROCESSABLE_ENTITY,[],'json');
@@ -95,10 +97,6 @@ class ArticleController extends AbstractController
         } catch (Exception $e){
              return new JsonResponse('Въвели сте непълни или некоректни данни !',RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
         }
-
-
-        $message = 'Статията бе публикувана успешно !';
-        return new JsonResponse($message,Response::HTTP_OK,[],true) ;
 
     }
 

@@ -10,34 +10,35 @@
         <div v-else-if="hasError" class="alert alert-danger" role="alert">
             {{ error }}
         </div>
-        <div >
-            {{ article.id}}
+        <div v-else class="container bg-white">
+            <div >
+                {{ article.id}}
+            </div>
+            <div>
+                {{article.title}}
+            </div>
+            <div>
+                {{article.contents}}
+            </div>
+            <div>
+                {{article.author}}
+            </div>
+            <div>
+                {{article.dateCreated | formatDate}}
+            </div>
+            <div>
+                {{article.dateEdit | formatDate}}
+            </div>
+            <div>
+                {{article.category}}
+            </div>
+            <div v-for="tag in article.tags">
+                <span>{{tag.name}}</span>
+            </div>
+            <div>
+                {{article.isPublished ? 'Публикувана':'Непубикувана'}}
+            </div>
         </div>
-        <div>
-            {{article.title}}
-        </div>
-        <div>
-            {{article.contents}}
-        </div>
-        <div>
-            {{article.author}}
-        </div>
-        <div>
-            {{article.dateCreated | formatDate}}
-        </div>
-        <div>
-            {{article.dateEdit | formatDate}}
-        </div>
-        <div>
-            {{article.category.name}}
-        </div>
-        <div v-for="tag in article.tags">
-            <span>{{tag.name}}</span>
-        </div>
-        <div>
-            {{article.isPublished ? 'Публикувана':'Непубикувана'}}
-        </div>
-
 
     </div>
 

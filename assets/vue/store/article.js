@@ -3,7 +3,7 @@ import { getField, updateField } from 'vuex-map-fields';
 import category from "./category";
 
 
-const CREATING_ARTICLE = "CREATING_ARTICLE",
+const
     CREATING_ARTICLE_SUCCESS = "CREATING_ARTICLE_SUCCESS",
     CREATING_ARTICLE_ERROR = "CREATING_ARTICLE_ERROR",
     FETCHING_ARTICLES = "FETCHING_ARTICLES",
@@ -70,16 +70,11 @@ export default {
         updateCategoryField(state,category){
             state.article.category = category;
         },
-        [CREATING_ARTICLE](state) {
-            state.isLoading = true;
-            state.article = [];
-        },
-        [CREATING_ARTICLE_SUCCESS](state, article) {
+        [CREATING_ARTICLE_SUCCESS](state, data) {
             state.isLoading = false;
             state.error = null;
-            state.responseData = article;
-            state.article = [];
-            state.articles.unshift(article);
+            state.responseData = 'Статията е публикувана успешно !';
+            state.article = data;
         },
         [CREATING_ARTICLE_ERROR](state, error) {
             state.isLoading = false;
@@ -102,7 +97,7 @@ export default {
         [FETCHING_ARTICLE](state) {
             state.isLoading = true;
             state.error = null;
-            state.article = [];
+            state.article = {};
         },
         [FETCHING_ARTICLE_SUCCESS](state, article) {
             state.isLoading = false;
@@ -113,7 +108,7 @@ export default {
         [FETCHING_ARTICLE_ERROR](state,error){
             state.isLoading = false;
             state.error = error;
-            state.article = [];
+            state.article = {};
         },
         [FETCHING_ARTICLES_ERROR](state, error) {
             state.isLoading = false;
@@ -127,8 +122,8 @@ export default {
     },
     actions: {
         async create({ commit }, articleFormData) {
-            commit(CREATING_ARTICLE);
             try {
+                console.log(articleFormData);
                 let response = await ArticleAPI.create(articleFormData);
                 commit(CREATING_ARTICLE_SUCCESS, response.data);
                 return response.data;
