@@ -104,8 +104,8 @@
             ]),
         },
         created(){
-            let store = this.$store
-
+            let store = this.$store;
+            store.commit("articleMod/CREATING_ARTICLE")
             let result = this.$store.dispatch("categoryMod/findAllCategories");
             result.then(function (e) {
                store.commit("articleMod/updateCategoryField",e[0].id);
@@ -116,11 +116,10 @@
                 if (event) {
                     event.preventDefault()
                 }
-                //console.log(this.$store.state.articleMod.article);
                 const result = await this.$store.dispatch("articleMod/create", this.$store.state.articleMod.article);
-                console.log(result);
+                console.log(result.id);
                 if (result !== null) {
-                    await this.$router.push({name:"admin_article_index"});
+                    await this.$router.push({name:"admin_article_show",params:{"id":result.id}});
                 }
             }
         }

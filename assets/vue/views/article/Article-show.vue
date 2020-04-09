@@ -1,7 +1,7 @@
 <template>
     <div class="main-content">
         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-            <h1 class="h2 caption-text">Всички статии</h1>
+            <h1 class="h2 caption-text">Статий >> </h1>
         </div>
         <div v-if="isLoading" class="row col">
             <p>Зареждане...</p>
@@ -9,6 +9,9 @@
 
         <div v-else-if="hasError" class="alert alert-danger" role="alert">
             {{ error }}
+        </div>
+        <div v-else-if="responseData" id="response-data-field" class="alert alert-success">
+            {{responseData}}
         </div>
         <div v-else class="container bg-white">
             <div >
@@ -30,7 +33,7 @@
                 {{article.dateEdit | formatDate}}
             </div>
             <div>
-                {{article.category}}
+                {{article.category.name}}
             </div>
             <div v-for="tag in article.tags">
                 <span>{{tag.name}}</span>
@@ -60,6 +63,9 @@
             },
             error(){
                 return this.$store.getters['articleMod/error'];
+            },
+            responseData(){
+                return this.$store.getters['articleMod/responseData'];
             }
         },
         created() {

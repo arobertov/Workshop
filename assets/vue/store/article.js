@@ -4,6 +4,7 @@ import category from "./category";
 
 
 const
+    CREATING_ARTICLE = "CREATING_ARTICLE",
     CREATING_ARTICLE_SUCCESS = "CREATING_ARTICLE_SUCCESS",
     CREATING_ARTICLE_ERROR = "CREATING_ARTICLE_ERROR",
     FETCHING_ARTICLES = "FETCHING_ARTICLES",
@@ -70,6 +71,11 @@ export default {
         updateCategoryField(state,category){
             state.article.category = category;
         },
+        [CREATING_ARTICLE](state){
+            state.article = {};
+            state.isLoading = false;
+            state.error = null;
+        },
         [CREATING_ARTICLE_SUCCESS](state, data) {
             state.isLoading = false;
             state.error = null;
@@ -123,7 +129,6 @@ export default {
     actions: {
         async create({ commit }, articleFormData) {
             try {
-                console.log(articleFormData);
                 let response = await ArticleAPI.create(articleFormData);
                 commit(CREATING_ARTICLE_SUCCESS, response.data);
                 return response.data;

@@ -11,10 +11,6 @@
             {{ error }}
         </div>
 
-        <div v-else-if="responseData" id="response-data-field" class="alert alert-success">
-            {{responseData}}
-        </div>
-
         <div v-else-if="!hasArticles" class="row col">
             Няма публикувана статия !
         </div>
@@ -65,9 +61,6 @@
     export default {
         name: "Article-index",
         computed: {
-            responseData(){
-                return this.$store.getters["articleMod/getResponseData"];
-            },
             isLoading() {
                 return this.$store.getters["articleMod/isLoading"];
             },
