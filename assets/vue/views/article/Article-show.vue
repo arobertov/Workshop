@@ -13,34 +13,8 @@
         <div v-else-if="responseData" id="response-data-field" class="alert alert-success">
             {{responseData}}
         </div>
-        <div v-else class="container bg-white">
-            <div >
-                {{ article.id}}
-            </div>
-            <div>
-                {{article.title}}
-            </div>
-            <div>
-                {{article.contents}}
-            </div>
-            <div>
-                {{article.author}}
-            </div>
-            <div>
-                {{article.dateCreated | formatDate}}
-            </div>
-            <div>
-                {{article.dateEdit | formatDate}}
-            </div>
-            <div>
-                {{article.category.name}}
-            </div>
-            <div v-for="tag in article.tags">
-                <span>{{tag.name}}</span>
-            </div>
-            <div>
-                {{article.isPublished ? 'Публикувана':'Непубикувана'}}
-            </div>
+        <div>
+            <ArticlePreview v-bind:article="article"/>
         </div>
 
     </div>
@@ -49,8 +23,12 @@
 </template>
 
 <script>
+    import ArticlePreview from "../../components/ArticlePreview";
     export default {
         name: "Article-show",
+        components:{
+            ArticlePreview
+        },
         computed:{
             article(){
                 return this.$store.getters['articleMod/article'];
