@@ -44,7 +44,9 @@
                     </td>
                     <td>{{article.dateCreated | formatDate }}</td>
                     <td>{{article.author  }}</td>
-                    <td>{{ article.category}}</td>
+                    <td>
+                        <span v-if="article.category">{{article.category}}</span>
+                    </td>
                     <td>
                         <div v-for="tag in article.tags">
                                 {{tag.name}}

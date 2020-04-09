@@ -22,10 +22,10 @@ export default {
     },
     mutations: {
         updateCategoryId(state, categoryId) {
-            state.id = categoryId;
+            state.category.id = categoryId;
         },
         updateCategoryName(state, categoryName) {
-            state.name = categoryName;
+            state.category.name = categoryName;
         },
         updateCategories(state,categories){
             state.categories = categories;

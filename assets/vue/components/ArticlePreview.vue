@@ -18,8 +18,9 @@
         <div>
             {{article.dateEdit | formatDate}}
         </div>
-        <div>
-            {{article.category.name}}
+        <div v-if="article.category">
+            <div>Категория: {{article.category.name}}</div>
+
         </div>
         <div v-for="tag in article.tags">
             <span>{{tag.name}}</span>

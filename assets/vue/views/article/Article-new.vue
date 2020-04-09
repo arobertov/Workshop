@@ -30,12 +30,8 @@
                     </div>
                     <div class="form-group row"><label class="col-form-label col-sm-2" for="article_tags">Tags</label>
                         <div class="col-sm-10">
-                            <select v-model="tags" id="article_tags" name="article[tags][]" class="form-control"
-                                                       multiple="multiple">
-                                <option value="1">Tag 1</option>
-                                <option value="2">Tag 2</option>
-                                <option value="3">Tag 3</option>
-                                <option value="4">Tag 4</option>
+                            <select v-model="tags" id="article_tags" name="article[tags][]" class="form-control" multiple>
+                                <option v-for="t in tagsMod" v-bind:value="t.id">{{t.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -43,7 +39,7 @@
                                                        for="article_category">Category</label>
                         <div class="col-sm-10">
                             <select v-model="category"  id="article_category" name="article[category]" class="form-control">
-                                <option v-for="category in categories" v-bind:value="category.id" >{{category.name}}</option>
+                                <option v-for="cat in categories" v-bind:value="cat.id" >{{cat.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -70,6 +66,11 @@
     });
     export default {
         name: "Article-new",
+        data() {
+            return {
+                tags: []
+            }
+        },
         computed: {
             responseData(){
                 return this.$store.getters["articleMod/getResponseData"];
@@ -95,6 +96,9 @@
             categories(){
                 return this.$store.getters["categoryMod/getCategories"];
             },
+            tagsMod(){
+                return this.$store.getters["tagMod/tags"];
+            },
             ...mapFields([
                 'title',
                 'contents',
@@ -108,7 +112,7 @@
             store.commit("articleMod/CREATING_ARTICLE")
             let result = this.$store.dispatch("categoryMod/findAllCategories");
             result.then(function (e) {
-               store.commit("articleMod/updateCategoryField",e[0].id);
+               store.commit("articleMod/updateCategoryField",e[0]);
             })
         },
         methods: {

@@ -1,7 +1,5 @@
 import ArticleAPI from "../api/article_api";
 import { getField, updateField } from 'vuex-map-fields';
-import category from "./category";
-
 
 const
     CREATING_ARTICLE = "CREATING_ARTICLE",
@@ -30,7 +28,7 @@ export default {
             title: '',
             contents: '',
             tags: [],
-            category: '',
+            category: {},
             isPublished:'',
         },
         responseData:''
