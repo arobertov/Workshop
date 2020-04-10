@@ -66,11 +66,10 @@ export default {
         updateArticleField(state, field) {
             updateField(state.article, field);
         },
-        updateCategoryField(state,category){
-            state.article.category = category;
-        },
         [CREATING_ARTICLE](state){
             state.article = {};
+            state.article.tags = [];
+            state.article.category = {};
             state.isLoading = false;
             state.error = null;
         },
