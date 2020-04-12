@@ -1,5 +1,5 @@
 <template>
-    <div v-else class="container bg-white">
+    <div v-if="article.isPublished != undefined" class="container bg-white">
         <div >
             {{ article.id}}
         </div>
@@ -26,7 +26,8 @@
             <span>{{tag.name}}</span>
         </div>
         <div>
-            {{article.isPublished ? 'Публикувана':'Непубикувана'}}
+            <span v-if="article.isPublished">Публикувана</span>
+            <span v-else>Непубикувана</span>
         </div>
     </div>
 </template>

@@ -28,10 +28,10 @@ export default {
             title: '',
             contents: '',
             tags: [],
-            category: {},
-            isPublished:'',
+            category: '',
+            isPublished:undefined,
         },
-        responseData:''
+        responseData:'',
     },
     getters: {
         getResponseData(state){
@@ -66,10 +66,11 @@ export default {
         updateArticleField(state, field) {
             updateField(state.article, field);
         },
-        [CREATING_ARTICLE](state){
+        [CREATING_ARTICLE](state,category){
             state.article = {};
             state.article.tags = [];
-            state.article.category = {};
+            state.article.category = category;
+            state.article.isPublished = undefined;
             state.isLoading = false;
             state.error = null;
         },

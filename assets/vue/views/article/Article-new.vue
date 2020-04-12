@@ -21,8 +21,9 @@
                     <div class="badge badge-danger" v-if="formErrors.contents"> {{formErrors.contents}}</div>
                     <div class="form-group row"><label class="col-form-label col-sm-2"
                                                        for="article_contents">Contents</label>
-                        <div class="col-sm-10"><textarea v-model="contents" id="article_contents" name="article[contents]"
-                                                         class="form-control"></textarea></div>
+                        <div class="col-sm-10">
+                            <vue-editor v-model="contents" ></vue-editor>
+                        </div>
                     </div>
                     <div class="form-group row"><label class="col-form-label col-sm-2" for="article_images">Images</label>
                         <div class="col-sm-10"><select id="article_images" name="article[images][]" class="form-control"
@@ -60,12 +61,38 @@
 
 <script>
     import { createHelpers } from 'vuex-map-fields';
+    import { VueEditor , Quill} from "vue2-editor";
+    import { ImageDrop } from "quill-image-drop-module";
+    import ImageResize from "quill-image-resize-module";
+
+    Quill.register('modules/imageDrop', ImageDrop);
+    Quill.register('modules/imageResize', ImageResize);
+
     const { mapFields } = createHelpers({
         getterType: 'articleMod/getArticleField',
         mutationType: 'articleMod/updateArticleField',
     });
+
     export default {
         name: "Article-new",
+        components: {
+            VueEditor
+        },
+        data() {
+            return {
+                content: "<h1>Initial Content</h1>",
+                customModulesForEditor: [{alias: "imageDrop", module: ImageDrop}, {
+                    alias: "imageResize",
+                    module: ImageResize
+                }],
+                editorSettings: {
+                    modules: {
+                        imageDrop: true,
+                        imageResize: {}
+                    }
+                }
+            }
+        },
         computed: {
             responseData(){
                 return this.$store.getters["articleMod/getResponseData"];
@@ -95,7 +122,7 @@
             let store = this.$store;
             let result = store.dispatch("categoryMod/findAllCategories");
             result.then(function (e) {
-               store.commit("articleMod/CREATING_ARTICLE");
+               store.commit("articleMod/CREATING_ARTICLE",e[0].id);
             })
         },
         methods: {
@@ -104,7 +131,6 @@
                     event.preventDefault()
                 }
                 const result = await this.$store.dispatch("articleMod/create", this.$store.state.articleMod.article);
-                console.log(result.id);
                 if (result !== null) {
                     await this.$router.push({name:"admin_article_show",params:{"id":result.id}});
                 }

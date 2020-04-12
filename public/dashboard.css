@@ -146,4 +146,12 @@ body {
     font-size: 1.4rem;
 }
 
+.page-item{
+    cursor: pointer;
+    color: blue;
+}
+.page-item.active , .page-item.disabled{
+    cursor: auto;
+    color: gray;
+}
 

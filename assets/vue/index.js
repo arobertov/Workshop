@@ -3,6 +3,10 @@ import App from "./views/admin-panel/Aside-nav";
 import router from "./router";
 import store from "./store";
 import moment from 'moment';
+import VuePaginate from 'vue-paginate';
+
+
+Vue.use(VuePaginate);
 
 //--------------  datetime filer  --------------------- //
 Vue.filter('formatDate', function (value) {
@@ -20,5 +24,5 @@ new Vue({
     },
     template: "<App/>",
     router,
-    store
+    store,
 }).$mount("#app");
