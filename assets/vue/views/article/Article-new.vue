@@ -75,16 +75,20 @@
 
     export default {
         name: "Article-new",
-        components: {
-            VueEditor
-        },
+        components: { VueEditor },
         data() {
             return {
                 content: "<h1>Initial Content</h1>",
-                customModulesForEditor: [{alias: "imageDrop", module: ImageDrop}, {
-                    alias: "imageResize",
-                    module: ImageResize
-                }],
+                customModulesForEditor: [
+                    {
+                        alias: "imageDrop",
+                        module: ImageDrop
+                    },
+                    {
+                        alias: "imageResize",
+                        module: ImageResize
+                    }
+                ],
                 editorSettings: {
                     modules: {
                         imageDrop: true,

@@ -60,12 +60,13 @@ Encore
         $: 'jquery',
         jQuery: 'jquery',
         'window.jQuery': 'jquery',
+        "window.Quill": "quill/dist/quill.js",
+        Quill: "quill/dist/quill.js"
     })
 
     // enables Sass/SCSS support
     .enableSassLoader()
     .enableVueLoader()
-
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
 
