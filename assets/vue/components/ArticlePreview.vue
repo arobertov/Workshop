@@ -7,7 +7,8 @@
             {{article.title}}
         </div>
         <div>
-            {{article.contents}}
+            <p>Съдържание :</p>
+            <span v-html="article.contents"></span>
         </div>
         <div>
             {{article.author}}

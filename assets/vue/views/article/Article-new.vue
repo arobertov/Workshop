@@ -22,7 +22,7 @@
                     <div class="form-group row"><label class="col-form-label col-sm-2"
                                                        for="article_contents">Contents</label>
                         <div class="col-sm-10">
-                            <vue-editor v-model="contents" ></vue-editor>
+                            <vue-editor :editorOptions="editorSettings" v-model="contents" class="bg-white"></vue-editor>
                         </div>
                     </div>
                     <div class="form-group row"><label class="col-form-label col-sm-2" for="article_images">Images</label>
@@ -79,16 +79,6 @@
         data() {
             return {
                 content: "<h1>Initial Content</h1>",
-                customModulesForEditor: [
-                    {
-                        alias: "imageDrop",
-                        module: ImageDrop
-                    },
-                    {
-                        alias: "imageResize",
-                        module: ImageResize
-                    }
-                ],
                 editorSettings: {
                     modules: {
                         imageDrop: true,
@@ -121,6 +111,9 @@
                 'category',
                 'isPublished'
             ]),
+        },
+        beforeCreate() {
+            store.commit("articleMod/CREATING_ARTICLE",1);
         },
         created(){
             let store = this.$store;
