@@ -77,7 +77,7 @@ export default {
         [CREATING_ARTICLE_SUCCESS](state, data) {
             state.isLoading = false;
             state.error = null;
-            state.responseData = 'Статията е публикувана успешно !';
+            state.responseData = data;
             state.article = data;
         },
         [CREATING_ARTICLE_ERROR](state, error) {
@@ -151,9 +151,20 @@ export default {
                 return null;
             }
         },
-        async edit({commit}){
-
-
+        async edit({commit},articleData){
+            try {
+                let response = await ArticleAPI.edit(articleData.articleId,articleData.articleFormData);
+                commit(CREATING_ARTICLE_SUCCESS, response.data);
+                return response.data;
+            } catch (error) {
+                let errorData = error.response.data;
+                if(errorData.hasOwnProperty('title') || errorData.hasOwnProperty('contents')){
+                    commit(FETCHING_FORM_ERRORS,errorData);
+                } else {
+                    commit(CREATING_ARTICLE_ERROR, errorData);
+                }
+                return null;
+            }
         },
         async findAll({ commit }) {
             commit(FETCHING_ARTICLES);

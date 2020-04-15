@@ -7,7 +7,7 @@ export default {
         });
     },
     edit(articleId,articleFormData){
-        return axios.post("/api/article/"+articleId+"/edit",{
+        return axios.put("/api/article/"+articleId+"/edit",{
             form_data: articleFormData
         })
     },

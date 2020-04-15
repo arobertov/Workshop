@@ -11,7 +11,7 @@
         </div>
 
         <div class="container-sm ">
-            <form name="article" method="post">
+            <form name="article" method="put">
                 <div id="article">
                     <div class="badge badge-danger" v-if="formErrors.title"> {{formErrors.title}}</div>
                     <div class="form-group row">
@@ -52,7 +52,7 @@
                                 <label class="form-check-label" for="article_isPublished">Is published</label></div>
                         </div>
                     </div>
-                    <button class="btn btn-success" @click="createArticle($event)">Редактирай</button>
+                    <button class="btn btn-success" @click="editArticle($event)">Редактирай</button>
                 </div>
             </form>
         </div>
@@ -123,7 +123,23 @@
             this.$store.dispatch('articleMod/findArticle',this.$route.params.id);
             let store = this.$store;
             store.dispatch("categoryMod/findAllCategories");
+        },
+        methods:{
+            async editArticle(event){
+                if (event) {
+                    event.preventDefault()
+                }
+                const articleData = {
+                    articleId: this.$route.params.id,
+                    articleFormData: this.$store.state.articleMod.article
+                };
+                const result = await this.$store.dispatch("articleMod/edit",articleData );
+                if (result !== null) {
+                    await this.$router.push({name:"admin_article_show",params:{"id":result.id}});
+                }
+            }
         }
+
     }
 </script>
 

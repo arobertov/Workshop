@@ -109,20 +109,33 @@ class ArticleController extends AbstractController
     public function showArticle(Article $article){
         try{
             $data = $this->serializer->serialize($article,'json' ,['groups' => ['article','tag','category']]);
-            dump($data);
             return new JsonResponse($data,Response::HTTP_OK,[],true) ;
         }catch (Exception $e){
             return new JsonResponse($e->getMessage(),RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
         }
-
-
-
-
     }
 
-    public function editArticle(){
-        $message = 'Статията бе редактирана успешно !';
-        return new JsonResponse($message,Response::HTTP_OK,[],true) ;
+    /**
+     * @Route("api/article/{id}/edit", name="api_article_edit", methods={"PUT"})
+     * @param Article $article
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function editArticle(Article $article,Request $request){
+        $requestData = json_decode($request->getContent(),true);
+        dump($requestData);
+        $handled = $this->formHandler->handleWithSubmit($requestData["form_data"], ArticleType::class, $article);
+        try {
+            if($handled instanceof Article){
+                $this->getDoctrine()->getManager()->flush();
+                return new JsonResponse('Статията е редактирана успешно !',Response::HTTP_OK,[],'json');
+            }
+            else {
+                return new JsonResponse(json_encode($handled),RESPONSE::HTTP_UNPROCESSABLE_ENTITY,[],'json');
+            }
+        }catch (Exception $e){
+            return new JsonResponse('Въвели сте непълни или некоректни данни !',RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
+        }
     }
 
     public function deleteArticle(){
