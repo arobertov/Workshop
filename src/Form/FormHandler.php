@@ -19,6 +19,12 @@ class FormHandler
     public function handleWithSubmit(array $data, string $type, $entity, array $options = [])
     {
         try {
+            if(is_array($data["category"])){
+                if(array_key_exists ('id',$data["category"])){
+                    $data["category"] = $data["category"]["id"];
+                }
+            }
+
             $form = $this->formFactory->create($type, $entity, $options);
             $form->submit($data);
         } catch (\Exception $e){

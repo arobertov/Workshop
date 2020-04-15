@@ -112,9 +112,6 @@
                 'isPublished'
             ]),
         },
-        beforeCreate() {
-            store.commit("articleMod/CREATING_ARTICLE",1);
-        },
         created(){
             let store = this.$store;
             let result = store.dispatch("categoryMod/findAllCategories");

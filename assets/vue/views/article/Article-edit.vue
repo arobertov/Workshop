@@ -32,15 +32,16 @@
                     <div class="form-group row"><label class="col-form-label col-sm-2" for="article_tags">Tags</label>
                         <div class="col-sm-10">
                             <select v-model="tags" id="article_tags" name="article[tags][]" class="form-control" multiple>
-                                <option v-for="t in tagsMod" v-bind:value="t.id">{{t.name}}</option>
+                                <option v-for="t in tagsMod" v-bind:value="t.id"
+                                :selected="tags[t.id]===t.id">{{t.name}}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group row"><label class="col-form-label col-sm-2"
                                                        for="article_category">Category</label>
-                        <div class="col-sm-10">
-                            <select v-model="category"  id="article_category" name="article[category]" class="form-control">
-                                <option v-for="cat in categories" v-bind:value="cat.id" >{{cat.name}}</option>
+                        <div class="col-sm-10" v-if="category">
+                            <select v-model="category.id"  id="article_category" name="article[category]" class="form-control">
+                                <option v-for="cat in categories" v-bind:value="cat.id">{{cat.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -120,9 +121,10 @@
             ]),
         },
         created() {
-            this.$store.dispatch('articleMod/findArticle',this.$route.params.id);
             let store = this.$store;
+            store.dispatch('articleMod/findArticle',this.$route.params.id);
             store.dispatch("categoryMod/findAllCategories");
+
         },
         methods:{
             async editArticle(event){
@@ -133,9 +135,10 @@
                     articleId: this.$route.params.id,
                     articleFormData: this.$store.state.articleMod.article
                 };
-                const result = await this.$store.dispatch("articleMod/edit",articleData );
-                if (result !== null) {
-                    await this.$router.push({name:"admin_article_show",params:{"id":result.id}});
+                const articleId = await this.$store.dispatch("articleMod/edit",articleData );
+                console.log(articleId);
+                if (articleId !== null) {
+                    await this.$router.push({name:"admin_article_show",params:{"id":articleId}});
                 }
             }
         }

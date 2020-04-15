@@ -102,6 +102,7 @@ export default {
             state.isLoading = true;
             state.error = null;
             state.article = {};
+            state.article.tags = [];
         },
         [FETCHING_ARTICLE_SUCCESS](state, article) {
             state.isLoading = false;
@@ -144,7 +145,6 @@ export default {
             commit(FETCHING_ARTICLE);
             try{
                 let response = await ArticleAPI.show(articleId);
-                console.log(response.data);
                 commit(FETCHING_ARTICLE_SUCCESS,response.data)
             }catch (error) {
                 commit(FETCHING_ARTICLE_ERROR,error);

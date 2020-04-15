@@ -81,7 +81,7 @@ class ArticleController extends AbstractController
         $article = new Article();
         $requestData = json_decode($request->getContent(),true);
         $article->setAuthor($this->currentUser->getAlias());
-
+        dump($requestData);
         $handled = $this->formHandler->handleWithSubmit($requestData["form_data"], ArticleType::class, $article);
         try{
             if($handled instanceof Article) {
@@ -123,12 +123,12 @@ class ArticleController extends AbstractController
      */
     public function editArticle(Article $article,Request $request){
         $requestData = json_decode($request->getContent(),true);
-        dump($requestData);
+        dump($requestData,$article);
         $handled = $this->formHandler->handleWithSubmit($requestData["form_data"], ArticleType::class, $article);
         try {
             if($handled instanceof Article){
                 $this->getDoctrine()->getManager()->flush();
-                return new JsonResponse('Статията е редактирана успешно !',Response::HTTP_OK,[],'json');
+                return new JsonResponse($article->getId(),Response::HTTP_OK,[],'json');
             }
             else {
                 return new JsonResponse(json_encode($handled),RESPONSE::HTTP_UNPROCESSABLE_ENTITY,[],'json');
