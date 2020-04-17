@@ -38,10 +38,14 @@
                     </div>
                     <div class="form-group row"><label class="col-form-label col-sm-2"
                                                        for="article_category">Category</label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-10" v-if="categories">
                             <select v-model="category"  id="article_category" name="article[category]" class="form-control">
                                 <option v-for="cat in categories" v-bind:value="cat.id" >{{cat.name}}</option>
                             </select>
+                        </div>
+                        <div v-else>
+                            <span> Няма създадени категории !  </span>
+                            <button class="btn btn-success">Добавете категория</button>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -116,7 +120,7 @@
             let store = this.$store;
             let result = store.dispatch("categoryMod/findAllCategories");
             result.then(function (e) {
-               store.commit("articleMod/CREATING_ARTICLE",e[0].id);
+                store.commit("articleMod/CREATING_ARTICLE",e[0].id);
             })
         },
         methods: {
@@ -131,6 +135,8 @@
             }
         }
     };
+
+    /* JSON EXAMPLE REQUEST {"form_data":{"tags":[1,2,3,4],"category":4,"isPublished":true,"contents":"<p>eeeeeeeeeeeefgf fffffffffffff</p>","title":"New title 55454454"}} */
 </script>
 
 <style scoped>

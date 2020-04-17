@@ -6,17 +6,17 @@
         <div class="row">
             <router-link :to="{ name:'admin_article_new' }" class="col-md-4 mb-3" tag="div">
                 <a href="#" class="btn add-btn bg-sub-caption btn-lg btn-block btn-huge">
-                    <span class="mr-3"><i class="fas fa-plus-square"></i></span>Създай статия
+                    <span class="mr-3"><b-icon-plus-square></b-icon-plus-square></span>Създай статия
                 </a>
             </router-link>
             <div class="col-md-4">
                 <a href="#" class="btn add-btn bg-sub-caption btn-lg btn-block btn-huge ">
-                    <span class="mr-3"><i class="fas fa-plus-square"></i></span>Създай новина
+                    <span class="mr-3"><b-icon-plus-square></b-icon-plus-square></span>Създай новина
                 </a>
             </div>
             <div class="col-md-4">
                 <a href="#" class="btn add-btn bg-sub-caption btn-lg btn-block btn-huge">
-                    <span class="mr-3"><i class="fas fa-plus-square"></i></span>Създай духовен бисер
+                    <span class="mr-3"><b-icon-plus-square></b-icon-plus-square></span>Създай духовен бисер
                 </a>
             </div>
     </div>

@@ -25,6 +25,7 @@
     "dependencies": {
         "@fortawesome/fontawesome-free": "^5.13.0",
         "axios": "^0.19.2",
+        "bootstrap-vue": "^2.11.0",
         "luxon": "^1.22.2",
         "moment": "^2.24.0",
         "quill-image-resize-module": "^3.0.0",

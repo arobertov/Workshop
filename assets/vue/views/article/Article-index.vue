@@ -16,6 +16,56 @@
         </div>
 
         <div  v-else>
+            <b-table hover
+                     id="article-dashboard-index"
+                     :items="articles"
+                     :fields="fields"
+                     :per-page="perPage"
+                     :current-page="currentPage"
+            >
+                <template v-slot:cell(title)="data">
+                    <div>{{data.item.title}}</div>
+                    <b-button-group  size="sm" style="font-size: 0.5rem">
+                        <b-button squared
+                                :to="{name:'admin_article_show',params:{id:data.item.id}}"
+                        >
+                            Прегледай
+                        </b-button>
+                        <b-button squared
+                                  :to="{name:'admin_article_edit',params:{id:data.item.id}}"
+                        >
+                            Редактирай
+                        </b-button>
+                        <b-button squared @click="deleteModal(data.item.id)">Изтрий</b-button>
+                    </b-button-group>
+                </template>
+                <template v-slot:cell(dateEdit)="data">
+                    {{data.item.dateEdit | formatDate}}
+                </template>
+                <template v-slot:cell(category)="data">
+                    {{data.item.category.name}}
+                </template>
+                <template v-slot:cell(tags)="data">
+                    <div v-for="tag in data.item.tags">{{tag.name}}</div>
+                </template>
+                <template v-slot:cell(isPublished)="data">
+                    {{data.item.isPublished ? 'Публикувана':'Непубикувана'}}
+                </template>
+            </b-table>
+            <div class="row">
+                <div class="col-md-4"> Намерени са {{rows}} статии</div>
+                <div class="col-md-8"><b-pagination
+                                   v-model="currentPage"
+                                   :total-rows="rows"
+                                   :per-page="perPage"
+                                   :limit="7"
+                                   aria-controls="article-dashboard-index"
+                ></b-pagination></div>
+            </div>
+            <b-modal id="delete-modal" title="BootstrapVue">
+                <p class="my-4">Hello from modal!</p>
+            </b-modal>
+            <!---
             <div class="container-md bg-white">
                 <table class="table table-hover">
                     <thead>
@@ -29,14 +79,7 @@
                         <th scope="col">Статус</th>
                     </tr>
                     </thead>
-                    <paginate
-                            ref="paginator"
-                            name="art_index"
-                            :list="articles"
-                            :per="6"
-                            tag="tbody"
-                    >
-                        <tr v-for="article in paginated('art_index')">
+                    <tr v-for="article in paginated('art_index')">
                             <td>{{article.id}}</td>
                             <td>
                                 <div>{{article.title}}</div>
@@ -61,28 +104,10 @@
                             </td>
                             <td>{{article.isPublished ? 'Публикувана':'Непубикувана'}}</td>
                         </tr>
-                    </paginate>
                 </table>
             </div>
-
-            <nav aria-label="Articles navigation">
-                <paginate-links
-                    for="art_index"
-                    :limit="5"
-                    :show-step-links="true"
-                    :classes="{
-                    'ul':'pagination',
-                    'li':'page-item',
-                    'li>a':'page-link'
-                }"
-                >
-                </paginate-links>
-                <span v-if="$refs.paginator">
-                    Преглеждате {{$refs.paginator.pageItemsCount}} резултата
-                </span>
-            </nav>
+            --->
         </div>
-
 
     </div>
 </template>
@@ -92,10 +117,52 @@
         name: "Article-index",
         data(){
            return {
-               paginate:['art_index'],
+               perPage:6,
+               currentPage:1,
+               fields:[
+                    {
+                        key:'id',
+                        label:'ИД',
+                        sortable:true
+                    },
+                    {
+                        key: 'title',
+                        label: 'Заглавие',
+                        sortable: true,
+                    },
+                    {
+                        key:'dateEdit',
+                        label:'Последна редакция',
+                        sortable:true
+                    },
+                    {
+                        key:'author',
+                        label:'Автор',
+                        sortable:true
+                    },
+                    {
+                        key:'category',
+                        label:'Категория',
+                        sortable:true
+                    },
+                    {
+                        key:'tags',
+                        label:'Етикети',
+                        sortable:false
+                    },
+                    {
+                        key:'isPublished',
+                        label:'Статус : ',
+                        sortable:true
+                    }
+                ]
            }
         },
         computed: {
+            rows() {
+                const rows =  this.$store.getters["articleMod/articles"];
+                return rows.length;
+            },
             isLoading() {
                 return this.$store.getters["articleMod/isLoading"];
             },
@@ -113,10 +180,54 @@
             },
         },
         created() {
-         if(!this.$store.getters["articleMod/hasArticles"]){
-             this.$store.dispatch("articleMod/findAll");
-         }
+            this.$store.commit("articleMod/FETCHING_ARTICLES");
+            if(!this.$store.getters["articleMod/hasArticles"]){
+                 this.$store.dispatch("articleMod/findAll");
+            }
     },
+        methods:{
+            async deleteArticle(articleId){
+                const result = await this.$store.dispatch("articleMod/deleteArticle",articleId);
+                if(result !== null){
+                    await this.deleteSuccessModal(result);
+                }
+            },
+            deleteSuccessModal(result){
+                this.$bvModal.msgBoxOk('Статията '+result+ 'бе изтрита успешно !', {
+                        id:'delete-success-modal',
+                        title: 'ПОТВЪРЖДЕНИЕ !',
+                        size: 'sm',
+                        buttonSize: 'sm',
+                        okVariant: 'success',
+                        headerClass: 'p-2 border-bottom-0',
+                        footerClass: 'p-2 border-top-0',
+                        centered: true,
+                });
+                setTimeout(()=>{this.$bvModal.hide('delete-success-modal')},3000);
+            },
+            deleteModal(articleId){
+                this.boxTwo = '';
+                this.$bvModal.msgBoxConfirm('Моля потвърдете че искате да изтриете статията !', {
+                    title: 'МОЛЯ ПОТВЪРДЕТЕ !',
+                    size: 'sm',
+                    buttonSize: 'sm',
+                    okVariant: 'danger',
+                    okTitle: 'ДА',
+                    cancelTitle: 'НЕ',
+                    footerClass: 'p-2',
+                    hideHeaderClose: false,
+                    centered: true
+                })
+                    .then(value => {
+                        if(value){
+                            this.deleteArticle(articleId);
+                        }
+                    })
+                    .catch(err => {
+                        // An error occurred
+                    })
+            }
+        }
     };
 </script>
 

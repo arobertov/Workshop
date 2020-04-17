@@ -5,6 +5,9 @@ const
     CREATING_ARTICLE = "CREATING_ARTICLE",
     CREATING_ARTICLE_SUCCESS = "CREATING_ARTICLE_SUCCESS",
     CREATING_ARTICLE_ERROR = "CREATING_ARTICLE_ERROR",
+    EDITING_ARTICLE = "EDITING_ARTICLE",
+    EDITING_ARTICLE_SUCCESS="EDITING_ARTICLE_SUCCESS",
+    DELETING_ARTICLE = "DELETING_ARTICLE",
     FETCHING_ARTICLES = "FETCHING_ARTICLES",
     FETCHING_ARTICLE = "FETCHING_ARTICLE",
     FETCHING_ARTICLE_SUCCESS = "FETCHING_ARTICLE_SUCCESS",
@@ -66,10 +69,10 @@ export default {
         updateArticleField(state, field) {
             updateField(state.article, field);
         },
-        [CREATING_ARTICLE](state,category){
+        [CREATING_ARTICLE](state,catId){
             state.article = {};
             state.article.tags = [];
-            state.article.category = category;
+            state.article.category = catId;
             state.article.isPublished = undefined;
             state.isLoading = false;
             state.error = null;
@@ -78,25 +81,46 @@ export default {
             state.isLoading = false;
             state.error = null;
             state.responseData = data;
-            state.article = data;
+            if(data !== null) state.article = data;
+            state.articles.unshift(state.article);
         },
         [CREATING_ARTICLE_ERROR](state, error) {
             state.isLoading = false;
             state.formErrors.title = '';
             state.formErrors.contents = '';
             state.error = error;
-            state.articles = [];
+        },
+        [EDITING_ARTICLE](state,tags){
+           state.isLoading = false;
+           state.formErrors = {};
+           state.error = null;
+           state.article.tags = tags;
+
+        },
+        [EDITING_ARTICLE_SUCCESS](state,articleId){
+            state.articles.forEach(function (e) {
+                if(e.id === articleId){
+                    state.articles.splice(e,1,state.article);
+                }
+            })
+        },
+        [DELETING_ARTICLE](state,articleId){
+            state.articles.forEach(function (e) {
+                if(e.id===articleId){
+                    state.articles.splice(e,1);
+                }
+            });
         },
         [FETCHING_ARTICLES](state) {
-            state.isLoading = true;
+            if(state.articles.length===0){
+                state.isLoading = true;
+            }
             state.error = null;
-            state.articles = [];
         },
         [FETCHING_ARTICLES_SUCCESS](state, articles) {
             state.isLoading = false;
             state.error = null;
             state.articles = articles;
-
         },
         [FETCHING_ARTICLE](state) {
             state.isLoading = true;
@@ -146,6 +170,7 @@ export default {
             try{
                 let response = await ArticleAPI.show(articleId);
                 commit(FETCHING_ARTICLE_SUCCESS,response.data)
+                return response.data;
             }catch (error) {
                 commit(FETCHING_ARTICLE_ERROR,error);
                 return null;
@@ -154,7 +179,7 @@ export default {
         async edit({commit},articleData){
             try {
                 let response = await ArticleAPI.edit(articleData.articleId,articleData.articleFormData);
-                commit(CREATING_ARTICLE_SUCCESS, response.data);
+                commit(EDITING_ARTICLE_SUCCESS,response.data)
                 return response.data;
             } catch (error) {
                 let errorData = error.response.data;
@@ -176,6 +201,19 @@ export default {
                 commit(FETCHING_ARTICLES_ERROR, error);
                 return null;
             }
+        },
+        async deleteArticle({commit},articleId){
+            try{
+                commit(DELETING_ARTICLE,articleId);
+                let response = await ArticleAPI.delete(articleId);
+                return response.data;
+            } catch (e) {
+                commit(FETCHING_ARTICLES_ERROR, error);
+                return null;
+            }
+
+
         }
     }
 };
+

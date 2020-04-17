@@ -138,8 +138,20 @@ class ArticleController extends AbstractController
         }
     }
 
-    public function deleteArticle(){
-        $message = 'Статията бе изтрита успешно !';
+    /**
+     * @Route("/api/article/{id}/delete")
+     * @param Article $article
+     * @return JsonResponse
+     */
+    public function deleteArticle(Article $article){
+        try{
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($article);
+            $entityManager->flush();
+        } catch (Exception $e){
+            return  new JsonResponse($e,Response::HTTP_INTERNAL_SERVER_ERROR,[],true);
+        }
+        $message = $article->getTitle() ;
         return new JsonResponse($message,Response::HTTP_OK,[],true) ;
     }
 
