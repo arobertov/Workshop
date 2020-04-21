@@ -53,8 +53,8 @@
                 </template>
             </b-table>
             <div class="row">
-                <div class="col-md-4"> Намерени са {{rows}} статии</div>
-                <div class="col-md-8"><b-pagination
+                <div class="col-md-3">  <b-button variant="success">Намерени са <b-badge variant="light">{{rows}}</b-badge> статии</b-button> </div>
+                <div class="col-md-9"><b-pagination
                                    v-model="currentPage"
                                    :total-rows="rows"
                                    :per-page="perPage"
@@ -62,9 +62,7 @@
                                    aria-controls="article-dashboard-index"
                 ></b-pagination></div>
             </div>
-            <b-modal id="delete-modal" title="BootstrapVue">
-                <p class="my-4">Hello from modal!</p>
-            </b-modal>
+
             <!---
             <div class="container-md bg-white">
                 <table class="table table-hover">
@@ -196,8 +194,8 @@
                 this.$bvModal.msgBoxOk('Статията '+result+ 'бе изтрита успешно !', {
                         id:'delete-success-modal',
                         title: 'ПОТВЪРЖДЕНИЕ !',
-                        size: 'sm',
-                        buttonSize: 'sm',
+                        size: 'lg',
+                        buttonSize: 'lg',
                         okVariant: 'success',
                         headerClass: 'p-2 border-bottom-0',
                         footerClass: 'p-2 border-top-0',
@@ -206,11 +204,11 @@
                 setTimeout(()=>{this.$bvModal.hide('delete-success-modal')},3000);
             },
             deleteModal(articleId){
-                this.boxTwo = '';
                 this.$bvModal.msgBoxConfirm('Моля потвърдете че искате да изтриете статията !', {
+                    id:'delete-confirm-modal',
                     title: 'МОЛЯ ПОТВЪРДЕТЕ !',
-                    size: 'sm',
-                    buttonSize: 'sm',
+                    size: 'lg',
+                    buttonSize: 'lg',
                     okVariant: 'danger',
                     okTitle: 'ДА',
                     cancelTitle: 'НЕ',
@@ -224,7 +222,7 @@
                         }
                     })
                     .catch(err => {
-                        // An error occurred
+                       this.$bvModal.msgBoxConfirm(err);
                     })
             }
         }

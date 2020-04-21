@@ -142,7 +142,6 @@ export default {
         [FETCHING_ARTICLES_ERROR](state, error) {
             state.isLoading = false;
             state.error = error;
-            state.articles = [];
         },
         [FETCHING_FORM_ERRORS](state,error){
             state.error = null;
@@ -207,7 +206,7 @@ export default {
                 commit(DELETING_ARTICLE,articleId);
                 let response = await ArticleAPI.delete(articleId);
                 return response.data;
-            } catch (e) {
+            } catch (error) {
                 commit(FETCHING_ARTICLES_ERROR, error);
                 return null;
             }

@@ -38,7 +38,6 @@ import AdminArticleNew from "../views/article/Article-new";
 import AdminArticleIndex from "../views/article/Article-index";
 import AdminArticleShow from "../views/article/Article-show";
 import AdminArticleEdit from "../views/article/Article-edit";
-import AdminArticleDelete from "../views/article/Article-delete"
 import TagIndex from "../views/tag/TagIndex";
 
 Vue.use(VueRouter);
@@ -70,11 +69,6 @@ export default new VueRouter({
             path: "/admin/article/:id/edit",
             name: "admin_article_edit",
             component:AdminArticleEdit,
-        },
-        {
-            path: "/admin/article/:id/delete",
-            name: "admin_article_delete",
-            component:AdminArticleDelete,
         },
         {
             path:"/tag/list-all",
