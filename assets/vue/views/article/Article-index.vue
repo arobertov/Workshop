@@ -179,7 +179,7 @@
         },
         created() {
             this.$store.commit("articleMod/FETCHING_ARTICLES");
-            if(!this.$store.getters["articleMod/hasArticles"]){
+            if(this.$store.getters["articleMod/articles"].length <= 1){
                  this.$store.dispatch("articleMod/findAll");
             }
     },
