@@ -25,17 +25,18 @@
     <input class="form-control form-control-dark w-100" type="text" placeholder="Търси" aria-label="Search">
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-            <a class="btn btn-success" href="#">Изход</a>
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <a class="btn btn-success" href="{{path('app_logout') }}">Изход</a>
+            {% else %}
+                <a data-toggle="modal" data-target="#loginModal">
+                    <span class="btn  btn-success">Login</span>
+                </a>
+            {% endif %}
         </li>
     </ul>
 </nav>
-
-
-
-
-            <! ------------------------ IMPORT VUE TEMPLATE -------------------------------------->
+<! ------------------------ IMPORT VUE TEMPLATE -------------------------------------->
             <div id="app"></div>
-
 
 
 {% block body %}{% endblock %}

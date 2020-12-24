@@ -11,10 +11,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/homepage", name="homepage")
+     * @Route("/", name="homepage")
      * @return Response
      */
-    public function home(){
+    public function home(): Response
+    {
         return $this->render('homepage.html.twig');
     }
 }
