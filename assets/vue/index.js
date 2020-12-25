@@ -1,7 +1,7 @@
 import Vue from "vue";
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import App from "./views/admin-panel/Aside-nav";
-import router from "./router";
+import router from "./router/main_routes"
 import store from "./store";
 import moment from 'moment';
 import VuePaginate from 'vue-paginate';
@@ -16,8 +16,6 @@ Vue.filter('formatDate', function (value) {
         return moment(String(value)).locale('bg').format('LLLL')
     }
 });
-
-
 
 
 new Vue({

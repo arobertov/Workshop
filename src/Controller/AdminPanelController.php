@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminPanelController extends AbstractController
 {
     /**
-     * @Route("admin/{vueRouting}",requirements={"vueRouting"="^(?!api).*"},name="admin_index")"}
+     * @Route("админ/{vueRouting}",requirements={"vueRouting"="^(?!api).*"},name="admin_index")"}
      */
     public function index(){
        return $this->render('admin_panel/index.html.twig');

@@ -136,7 +136,6 @@
         }
     };
 
-    /* JSON EXAMPLE REQUEST {"form_data":{"tags":[1,2,3,4],"category":4,"isPublished":true,"contents":"<p>eeeeeeeeeeeefgf fffffffffffff</p>","title":"New title 55454454"}} */
 </script>
 
 <style scoped>
