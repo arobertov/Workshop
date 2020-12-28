@@ -53,14 +53,18 @@
                 </template>
             </b-table>
             <div class="row">
-                <div class="col-md-3">  <b-button variant="success">Намерени са <b-badge variant="light">{{rows}}</b-badge> статии</b-button> </div>
-                <div class="col-md-9"><b-pagination
+                <div class="col-md-3">
+                  <b-button variant="success">Намерени са <b-badge variant="light">{{rows}}</b-badge> статии</b-button>
+                </div>
+                <div class="col-md-9">
+                  <b-pagination
                                    v-model="currentPage"
                                    :total-rows="rows"
                                    :per-page="perPage"
                                    :limit="7"
                                    aria-controls="article-dashboard-index"
-                ></b-pagination></div>
+                  ></b-pagination>
+                </div>
             </div>
 
             <!---

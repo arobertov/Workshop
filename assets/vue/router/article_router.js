@@ -34,9 +34,5 @@ export default [
             name: "admin_article_edit",
             component:AdminArticleEdit,
         },
-        {
-            path: "*",
-            redirect: "/"
-        }
     ]
 
