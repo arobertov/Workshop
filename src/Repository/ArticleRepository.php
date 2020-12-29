@@ -66,4 +66,22 @@ class ArticleRepository extends ServiceEntityRepository
         return $query->getArrayResult();
     }
 
+    /**
+     * @param $handled
+     * @return Article
+     * @throws \Exception
+     */
+    public function addNewArticle($handled): Article
+    {
+        try {
+            $entityManager = $this->em;
+            $entityManager->persist($handled);
+            $entityManager->flush();
+            return $handled;
+        } catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
+
+    }
+
 }

@@ -9,7 +9,9 @@ Vue.use(VueRouter);
 const baseRoutes = [];
 
 const routes = baseRoutes.concat(article_router).concat(category_router);
-console.log(routes);
+
+/* print vue routes  */
+// console.log(routes);
 export default new VueRouter({
     mode: "history",
     routes:routes,

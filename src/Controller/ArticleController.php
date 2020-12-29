@@ -6,6 +6,7 @@ use App\Entity\Article;
 use App\Form\ArticleType;
 use App\Form\FormHandler;
 use App\Repository\ArticleRepository;
+use App\Service\ArticleServiceInterface;
 use Exception;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -38,11 +39,20 @@ class ArticleController extends AbstractController
     /** @var FormHandler  */
     private $formHandler;
 
-    public  function  __construct(Security $security,SerializerInterface $serializer,FormHandler $formHandler)
+    /** @var ArticleServiceInterface  */
+    private $articleService;
+
+    public  function  __construct(
+        Security $security,
+        SerializerInterface $serializer,
+        FormHandler $formHandler,
+        ArticleServiceInterface $articleService
+    )
     {
         $this->currentUser = $security->getUser();
         $this->serializer = $serializer;
         $this->formHandler = $formHandler;
+        $this->articleService = $articleService;
     }
 
     /**
@@ -63,9 +73,9 @@ class ArticleController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    public function indexAdmin(ArticleRepository $articleRepository) :JsonResponse
+    public function indexAdmin() :JsonResponse
     {
-        $articles = $articleRepository->findAllArticles();
+        $articles = $this->articleService->allArticles();
         $data = $this->serializer->serialize($articles, JsonEncoder::FORMAT);
         return new JsonResponse($data,Response::HTTP_OK,[],true);
     }
@@ -73,21 +83,18 @@ class ArticleController extends AbstractController
     /**
      * @Route("api/article/new", name="article_create",methods={"POST"})
      * @param Request $request
+     * @param ArticleRepository $articleRepository
      * @return JsonResponse
-     * @throws Exception
      */
-    public function createNewArticle(Request $request)
+    public function createNewArticle(Request $request,ArticleRepository $articleRepository): JsonResponse
     {
         $article = new Article();
         $requestData = json_decode($request->getContent(),true);
         $article->setAuthor($this->currentUser->getAlias());
-        dump($requestData);
         $handled = $this->formHandler->handleWithSubmit($requestData["form_data"], ArticleType::class, $article);
         try{
             if($handled instanceof Article) {
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($handled);
-                $entityManager->flush();
+                $articleRepository->addNewArticle($handled);
                 $data = $this->serializer->serialize($handled,JsonEncoder::FORMAT,['groups' => ['article','tag','category']]);
                 return new JsonResponse($data,Response::HTTP_OK,[],true) ;
             }
@@ -95,7 +102,7 @@ class ArticleController extends AbstractController
                 return new JsonResponse(json_encode($handled),RESPONSE::HTTP_UNPROCESSABLE_ENTITY,[],'json');
             }
         } catch (Exception $e){
-             return new JsonResponse('Въвели сте непълни или некоректни данни !',RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
+             return new JsonResponse('Въвели сте непълни или некоректни данни !'.$e ,RESPONSE::HTTP_INTERNAL_SERVER_ERROR,[],'json');
         }
 
     }
@@ -106,7 +113,8 @@ class ArticleController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    public function showArticle(Article $article){
+    public function showArticle(Article $article): JsonResponse
+    {
         try{
             $data = $this->serializer->serialize($article,'json' ,['groups' => ['article','tag','category']]);
             return new JsonResponse($data,Response::HTTP_OK,[],true) ;
@@ -143,7 +151,8 @@ class ArticleController extends AbstractController
      * @param Article $article
      * @return JsonResponse
      */
-    public function deleteArticle(Article $article){
+    public function deleteArticle(Article $article): JsonResponse
+    {
         try{
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($article);
